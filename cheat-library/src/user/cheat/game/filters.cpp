@@ -59,30 +59,31 @@ namespace cheat::game::filters
 		SimpleFilter ButterflyWings = { app::EntityType__Enum_1::EnvAnimal, "Butterfly" };
 		SimpleFilter Crab = { app::EntityType__Enum_1::EnvAnimal, "Crab" };
 		SimpleFilter CrystalCore = { app::EntityType__Enum_1::EnvAnimal, "Wisp" };
-		SimpleFilter Fish = { app::EntityType__Enum_1::EnvAnimal, "Fish" };
+		SimpleFilter Fish = { app::EntityType__Enum_1::Monster, "Fish" };
 		SimpleFilter Frog = { app::EntityType__Enum_1::EnvAnimal, "Frog" };
 		SimpleFilter LizardTail = { app::EntityType__Enum_1::EnvAnimal, "Lizard" };
 		SimpleFilter LuminescentSpine = { app::EntityType__Enum_1::EnvAnimal, "FireFly" };
 		SimpleFilter Onikabuto = { app::EntityType__Enum_1::GatherObject, "Electrohercules" };
-		SimpleFilter Starconch = { app::EntityType__Enum_1::GatherObject, "_Shell" };
-		SimpleFilter Eel = { app::EntityType__Enum_1::EnvAnimal, "_Eel_" };
-		SimpleFilter Inu = { app::EntityType__Enum_1::EnvAnimal, "Inu_Shihandai" };
-		SimpleFilter Boar = { app::EntityType__Enum_1::EnvAnimal, "Boar" };
-		SimpleFilter Fox = { app::EntityType__Enum_1::EnvAnimal, "Fox" };
-		SimpleFilter Squirrel = { app::EntityType__Enum_1::EnvAnimal, "Squirrel" };
-		SimpleFilter Crane = { app::EntityType__Enum_1::EnvAnimal, "Crane" };
-		SimpleFilter Falcon = { app::EntityType__Enum_1::EnvAnimal, "Falcon" };
+		SimpleFilter Starconch = { app::EntityType__Enum_1::GatherObject, "Shell" };
+		SimpleFilter Eel = { app::EntityType__Enum_1::EnvAnimal, "Eel_" };
+		SimpleFilter Inu = { app::EntityType__Enum_1::EnvAnimal, "_Inu_Shihandai" };
+		SimpleFilter Boar = { app::EntityType__Enum_1::Monster, "Boar" };
+		SimpleFilter Fox = { app::EntityType__Enum_1::Monster, "Fox" };
+		SimpleFilter Squirrel = { app::EntityType__Enum_1::Monster, "Squirrel" };
+		SimpleFilter Crane = { app::EntityType__Enum_1::Monster, "Crane" };
+		SimpleFilter Falcon = { app::EntityType__Enum_1::Monster, "Falcon" };
 		SimpleFilter LucklightFly = { app::EntityType__Enum_1::EnvAnimal, "Boltbug_" };
 		SimpleFilter Salamander = { app::EntityType__Enum_1::EnvAnimal, "Salamander" };
-		SimpleFilter Pigeon = { app::EntityType__Enum_1::EnvAnimal, "Pigeon" };
-		SimpleFilter Crow = { app::EntityType__Enum_1::EnvAnimal, "Crow" };
-		SimpleFilter Finch = { app::EntityType__Enum_1::EnvAnimal, "Tit" };
-		SimpleFilter Wigeon = { app::EntityType__Enum_1::EnvAnimal, "Wigeon" };
-		SimpleFilter Dog = { app::EntityType__Enum_1::EnvAnimal, "DogPrick" };
-		SimpleFilter Cat = { app::EntityType__Enum_1::EnvAnimal, "Cat" };
-		SimpleFilter Weasel = { app::EntityType__Enum_1::EnvAnimal, "Marten" };
+		SimpleFilter Pigeon = { app::EntityType__Enum_1::Monster, "Pigeon" };
+		SimpleFilter Crow = { app::EntityType__Enum_1::Monster, "Crow" };
+		SimpleFilter Finch = { app::EntityType__Enum_1::Monster, "Tit" };
+		SimpleFilter Wigeon = { app::EntityType__Enum_1::Monster, "Wigeon" };
+		SimpleFilter Dog = { app::EntityType__Enum_1::Monster, "DogPrick" };
+		SimpleFilter Cat = { app::EntityType__Enum_1::Monster, "Cat" };
+		SimpleFilter Weasel = { app::EntityType__Enum_1::Monster, "Marten" };
+		SimpleFilter WeaselThief = { app::EntityType__Enum_1::Monster, "Thoarder_Weasel" };
 		SimpleFilter Kitsune = { app::EntityType__Enum_1::EnvAnimal, "Vulpes" };
-		SimpleFilter BakeDanuki = { app::EntityType__Enum_1::EnvAnimal, "Inu_Tanuki" };
+		SimpleFilter BakeDanuki = { app::EntityType__Enum_1::Monster, "Inu_Tanuki" };
 	}
 
 	namespace mineral
@@ -116,7 +117,8 @@ namespace cheat::game::filters
 		SimpleFilter Kairagi = { app::EntityType__Enum_1::Monster, "_Kairagi" };
 		SimpleFilter RuinGuard = { app::EntityType__Enum_1::Monster, "_Defender" };
 		SimpleFilter RuinHunter = { app::EntityType__Enum_1::Monster, "_Formathr" };
-		SimpleFilter RuinSentinel = { app::EntityType__Enum_1::Monster, std::vector<std::string> {"_Konungmathr", "_Apparatus_Enigma" } };
+		SimpleFilter RuinGrader = { app::EntityType__Enum_1::Monster, "_Konungmathr" };
+		SimpleFilter RuinSentinel = { app::EntityType__Enum_1::Monster, std::vector<std::string> {"_Apparatus_Enigma" } };
 		SimpleFilter Samachurl = { app::EntityType__Enum_1::Monster, "_Shaman" };
 	    SimpleFilter ShadowyHusk = { app::EntityType__Enum_1::Monster, "ForlornVessel_Strong" };
 		SimpleFilter Slime = { app::EntityType__Enum_1::Monster, "_Slime" };
@@ -152,6 +154,7 @@ namespace cheat::game::filters
 		SimpleFilter OceanidFalcon = { app::EntityType__Enum_1::Monster, "_Oceanid_Falcon" };
 		SimpleFilter PerpetualMechanicalArray = { app::EntityType__Enum_1::Monster, "_Apparatus_Perpetual" };
 		SimpleFilter PrimoGeovishap = { app::EntityType__Enum_1::Monster, "_Drake_Primo_Rock" };
+		SimpleFilter HydroBathysmalVishap = { app::EntityType__Enum_1::Monster, "_Drake_Deepsea_Water" };
 		SimpleFilter CryoBathysmalVishap = { app::EntityType__Enum_1::Monster, "_Drake_Deepsea_Ice" };
 		SimpleFilter ElectroBathysmalVishap = { app::EntityType__Enum_1::Monster, "_Drake_Deepsea_Electric" };
 		SimpleFilter ThunderManifestation = { app::EntityType__Enum_1::Monster, "_Raijin" };
@@ -249,11 +252,123 @@ namespace cheat::game::filters
 
 	namespace combined
 	{
-		SimpleFilter Oculies = featured::Anemoculus + featured::CrimsonAgate + featured::Electroculus + 
-			featured::Geoculus + featured::Lumenspar + featured::KeySigil;
+		SimpleFilter Oculies = {
+			featured::Anemoculus +
+			featured::CrimsonAgate +
+			featured::Electroculus +
+			featured::Geoculus +
+			featured::Lumenspar +
+			featured::KeySigil
+		};
 		SimpleFilter Chests = { app::EntityType__Enum_1::Chest };
+		SimpleFilter Ores = {
+			mineral::AmethystLump +
+			mineral::ArchaicStone +
+			mineral::CorLapis +
+			mineral::CrystalChunk +
+			mineral::CrystalMarrow +
+			mineral::ElectroCrystal +
+			mineral::IronChunk +
+			mineral::NoctilucousJade +
+			mineral::MagicalCrystalChunk +
+			mineral::StarSilver +
+			mineral::WhiteIronChunk
+		};
+		WhitelistFilter Doodads = {
+			std::vector<app::EntityType__Enum_1> { app::EntityType__Enum_1::Gadget },
+			std::vector<std::string> {
+			"Monster_Effigy_Electric_01",
+			"Monster_Effigy_Electric_02",
+			"Monster_Effigy_Wind_01",
+			"Monster_Effigy_Wind_02",
+			"Monster_Effigy_Rock_01",
+			"Monster_Effigy_Rock_02",
+			"Monster_Effigy_Water_01",
+			"Monster_Effigy_Ice_01",
+			"Monster_Effigy_Fire_01",
+			"Monster_Effigy_Water_Underling_Ooze_01",
+			"Monster_Effigy_Water_Underling_Ooze_02",
+			"Monster_Effigy_Water_Underling_Ooze_03",
+			"Monster_Effigy_Water_Underling_Ooze_04",
+			"HiliWoodenBox",
+			"HiliWoodenBarrel",
+			"HumanBox",
+			"HumanJars",
+			"QQTotem",
+			"WatchTower01",
+			"WatchTower02"
+		} };
+		SimpleFilter Animals = { app::EntityType__Enum_1::EnvAnimal };
+		SimpleFilter AnimalDrop = {
+			living::Falcon +
+			living::Pigeon +
+			living::Finch +
+			living::Wigeon +
+			living::Crane +
+			living::Crow +
+			living::Fox +
+			living::Squirrel +
+			living::Boar +
+			living::Weasel +
+			living::Fish
+		};
+		SimpleFilter AnimalPickUp = {
+			living::CrystalCore +
+			living::Salamander +
+			living::Frog +
+			living::Crab +
+			living::LizardTail +
+			living::Eel +
+			living::Onikabuto +
+			living::ButterflyWings +
+			living::LucklightFly +
+			living::LuminescentSpine +
+			living::Starconch +
+			living::BirdEgg +
+			living::WeaselThief
+		};
+		SimpleFilter AnimalNPC = {
+			living::Dog +
+			living::Cat +
+			living::Kitsune +
+			living::BakeDanuki
+		};
 		SimpleFilter Monsters = { app::EntityType__Enum_1::Monster };
-		SimpleFilter Bosses = {
+		SimpleFilter MonsterCommon = {
+			monster::Slime +
+			monster::Specter +
+			monster::Whopperflower +
+			monster::Hilichurl +
+			monster::Samachurl +
+			monster::UnusualHilichurl +
+			monster::FatuiSkirmisher +
+			monster::TreasureHoarder +
+			monster::Nobushi +
+			monster::Kairagi
+		};
+		SimpleFilter MonsterElites = {
+			monster::Mitachurl +
+			monster::AbyssMage +
+			monster::HydroAbyssHerald +
+			monster::PyroAbyssLector +
+			monster::ElectroAbyssLector +
+			monster::RifthoundWhelp +
+			monster::Rifthound +
+			monster::ShadowyHusk +
+			monster::RuinGuard +
+			monster::RuinHunter +
+			monster::RuinGrader +
+			monster::RuinSentinel +
+			monster::Cicin +
+			monster::FatuiCicinMage +
+			monster::FatuiAgent +
+			monster::FatuiMirrorMaiden +
+			monster::GeovishapHatchling +
+			monster::Geovishap +
+			monster::HydroBathysmalVishap +
+			monster::EyeOfTheStorm
+		};
+		SimpleFilter MonsterBosses = {
 			// Adding these comments for better tracking.
 			// Trounce
 			monster::Dvalin +
@@ -283,21 +398,7 @@ namespace cheat::game::filters
 			monster::CryoBathysmalVishap +
 			monster::ElectroBathysmalVishap
 		};
-		SimpleFilter Ores = {
-			mineral::AmethystLump +
-			mineral::ArchaicStone +
-			mineral::CorLapis +
-			mineral::CrystalChunk +
-			mineral::CrystalMarrow +
-			mineral::ElectroCrystal +
-			mineral::IronChunk +
-			mineral::NoctilucousJade +
-			mineral::MagicalCrystalChunk +
-			mineral::StarSilver +
-			mineral::WhiteIronChunk
-		};
-		SimpleFilter MonsterEquips = { app::EntityType__Enum_1::MonsterEquip };
-		SimpleFilter Shielded = {
+		SimpleFilter MonsterShielded = {
 			// Taken from https://genshin-impact.fandom.com/wiki/Shields/Enemy.
 			// We won't be including Regisvines and enemy objects here,
 			// just regular monsters.
@@ -311,32 +412,7 @@ namespace cheat::game::filters
 			monster::Cicin +
 			monster::Whopperflower
 		};
-		WhitelistFilter Doodads = {
-			std::vector<app::EntityType__Enum_1> {
-				app::EntityType__Enum_1::Gadget
-			},
-				std::vector<std::string> {
-					"Monster_Effigy_Electric_01",
-					"Monster_Effigy_Electric_02",
-					"Monster_Effigy_Wind_01",
-					"Monster_Effigy_Wind_02",
-					"Monster_Effigy_Rock_01",
-					"Monster_Effigy_Rock_02",
-					"Monster_Effigy_Water_01",
-					"Monster_Effigy_Ice_01",
-					"Monster_Effigy_Fire_01",
-					"Monster_Effigy_Water_Underling_Ooze_01",
-					"Monster_Effigy_Water_Underling_Ooze_02",
-					"Monster_Effigy_Water_Underling_Ooze_03",
-					"Monster_Effigy_Water_Underling_Ooze_04",
-					"HiliWoodenBox",
-					"HiliWoodenBarrel",
-					"HumanBox",
-					"HumanJars",
-					"QQTotem",
-					"WatchTower01",
-					"WatchTower02"
-			} };
+		SimpleFilter MonsterEquips = { app::EntityType__Enum_1::MonsterEquip };
 		BlacklistFilter Living = {
 			std::vector<app::EntityType__Enum_1> {
 				app::EntityType__Enum_1::EnvAnimal,

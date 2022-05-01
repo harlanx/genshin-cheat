@@ -255,12 +255,18 @@ namespace cheat::game::filters
 	{
 		extern SimpleFilter Oculies;
 		extern SimpleFilter Chests;
-		extern SimpleFilter Monsters;
-		extern SimpleFilter Bosses;
 		extern SimpleFilter Ores;
-		extern SimpleFilter MonsterEquips;
-		extern SimpleFilter Shielded;
 		extern WhitelistFilter Doodads;
+		extern SimpleFilter Animals;
+		extern SimpleFilter AnimalDrop;
+		extern SimpleFilter AnimalPickUp;
+		extern SimpleFilter AnimalNPC;
+		extern SimpleFilter Monsters;
+		extern SimpleFilter MonsterCommon;
+		extern SimpleFilter MonsterElites;
+		extern SimpleFilter MonsterBosses;
+		extern SimpleFilter MonsterShielded;
+		extern SimpleFilter MonsterEquips;
         extern BlacklistFilter Living;
 	}
 }

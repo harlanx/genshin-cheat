@@ -5,13 +5,19 @@
 #include <cheat/events.h>
 #include <cheat/game/EntityManager.h>
 #include <cheat/game/util.h>
-#include <cheat/game/filters.h>
 
 namespace cheat::feature 
 {
     MobVacuum::MobVacuum() : Feature(),
         NF(f_Enabled,        "Mob vacuum", "MobVacuum", false),
-        NF(f_IncludeAnimals, "Include living", "MobVacuum", false),
+        NF(f_IncludeMonsters, "Include Monsters", "MobVacuum", true),
+        NF(f_MonsterCommon, "Only targeted", "MobVacuum", true),
+        NF(f_MonsterElites, "Only targeted", "MobVacuum", true),
+        NF(f_MonsterBosses, "Only targeted", "MobVacuum", true),
+        NF(f_IncludeAnimals, "Include Animals", "MobVacuum", true),
+        NF(f_AnimalDrop, "Only targeted", "MobVacuum", true),
+        NF(f_AnimalPickUp, "Only targeted", "MobVacuum", true),
+        NF(f_AnimalNPC, "Only targeted", "MobVacuum", true),
         NF(f_Speed,      "Speed",         "MobVacuum", 2.5f),
         NF(f_Distance,   "Distance",      "MobVacuum", 1.5f),
         NF(f_Radius,     "Radius",        "MobVacuum", 10.0f),
@@ -32,9 +38,18 @@ namespace cheat::feature
     {
         ConfigWidget("Enabled", f_Enabled, "Enables mob vacuum.\n" \
             "Mobs within the specified radius will move\nto a specified distance in front of the player.");
-        ImGui::Indent();
+        BeginGroupPanel("Monsters", ImVec2(-1, 0));
+        ConfigWidget("Include Monsters", f_IncludeMonsters, "Include monsters in vacuum.");
+        ImGui::SameLine(); ConfigWidget("Common", f_MonsterCommon, "Common Enemies.");
+        ImGui::SameLine(); ConfigWidget("Elite", f_MonsterElites, "Elite Enemies.");
+        ImGui::SameLine(); ConfigWidget("Boss", f_MonsterBosses, "Boss Enemies.");
+        EndGroupPanel();
+        BeginGroupPanel("Monsters", ImVec2(-1, 0));
         ConfigWidget("Include Animals", f_IncludeAnimals, "Include animals in vacuum.");
-        ImGui::Unindent();
+        ImGui::SameLine(); ConfigWidget("Droppers", f_AnimalDrop, "Animals you need to defeat before collect.");
+        ImGui::SameLine(); ConfigWidget("Pick-ups", f_AnimalPickUp, "Animals you can immediately collect.");
+        ImGui::SameLine(); ConfigWidget("NPCs", f_AnimalNPC, "Animals without mechanics.");
+        EndGroupPanel();
         ConfigWidget("Instant Vacuum", f_Instantly, "Vacuum entities instantly.");
         ConfigWidget("Only Hostile/Aggro", f_OnlyTarget, "If enabled, vacuum will only affect monsters targeting you. Will not affect animals.");
         ConfigWidget("Speed", f_Speed, 0.1f, 1.0f, 15.0f, "If 'Instant Vacuum' not checked, mob will be vacuumed at the specified speed.");
@@ -50,7 +65,7 @@ namespace cheat::feature
     void MobVacuum::DrawStatus() 
     { 
         ImGui::Text("Vacuum [%s]\n[%s|%.01fm|%.01fm|%s]", 
-            f_IncludeAnimals ? "Living" : "Monsters",
+            f_IncludeMonsters && f_IncludeAnimals ? "All" : f_IncludeMonsters ? "Monsters" : f_IncludeAnimals ? "Animals" : "None",
             f_Instantly ? "Instant" : fmt::format("Normal|{:.1f}", f_Speed.value()).c_str(),
             f_Radius.value(),
             f_Distance.value(),
@@ -64,18 +79,31 @@ namespace cheat::feature
         return instance;
     }
 
-    // Check if entity valid for mob vacuum.
-    bool MobVacuum::IsEntityForVac(game::Entity* entity)
-    {
-        const auto filter = f_IncludeAnimals ?
-            (game::IEntityFilter*)&game::filters::combined::Living :
-            &game::filters::combined::Monsters;
+    // Combines selected vacuum filters.
+    auto MobVacuum::CombineFilters() {
+        
+        std::vector<game::SimpleFilter> filters = {};
+        if (f_IncludeMonsters) {
+            if (f_MonsterCommon) filters.push_back(game::filters::combined::MonsterCommon);
+            if (f_MonsterElites) filters.push_back(game::filters::combined::MonsterElites);
+            if (f_MonsterBosses) filters.push_back(game::filters::combined::MonsterBosses);
+        }
+        if (f_IncludeAnimals) {
+            if (f_AnimalDrop) filters.push_back(game::filters::combined::AnimalDrop);
+            if (f_AnimalPickUp) filters.push_back(game::filters::combined::AnimalPickUp);
+            if (f_AnimalNPC) filters.push_back(game::filters::combined::AnimalNPC);
+        }
+        return filters;
+    }
 
-        if (!filter->IsValid(entity))
+    // Check if entity valid for mob vacuum.
+    bool MobVacuum::IsEntityForVac(game::Entity* entity, std::vector<game::SimpleFilter> filters)
+    {
+        bool entityValid = std::any_of(filters.cbegin(), filters.cend(), [entity](const game::SimpleFilter filter) { return filter.IsValid(entity); });
+        if (!entityValid)
             return false;
 
         auto& manager = game::EntityManager::instance();
-        //bool isMonster = game::filters::combined::Monsters.IsValid(entity);
         if (f_OnlyTarget && game::filters::combined::Monsters.IsValid(entity))
         {
             auto monsterCombat = entity->combat();
@@ -111,11 +139,18 @@ namespace cheat::feature
         if (IsVectorZero(targetPos))
             return;
 
+        if (!f_IncludeMonsters && !f_IncludeAnimals)
+            return;
+
+        auto filters = CombineFilters();
+        if (filters.empty())
+            return;
+
         auto& manager = game::EntityManager::instance();
         auto newPositions = new std::map<uint32_t, app::Vector3>();
         for (const auto& entity : manager.entities())
         {
-            if (!IsEntityForVac(entity))
+            if (!IsEntityForVac(entity, filters))
                 continue;
 
             if (f_Instantly)
@@ -157,7 +192,8 @@ namespace cheat::feature
 
         auto& manager = game::EntityManager::instance();
         auto entity = manager.entity(entityId);
-        if (!IsEntityForVac(entity))
+        auto filters = CombineFilters();
+        if (!IsEntityForVac(entity, filters))
             return;
 
         app::Vector3 targetPos = CalcMobVacTargetPos();
