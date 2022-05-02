@@ -60,8 +60,8 @@ namespace cheat::feature
 			}
 			else
 			{
-				ConfigWidget("Min Multiplier", f_minMultiplier, 1, 2, 1000, "Attack count minimum multiplier.");
-				ConfigWidget("Max Multiplier", f_maxMultiplier, 1, 2, 1000, "Attack count maximum multiplier.");
+				ConfigWidget("Min Multiplier", f_minMultiplier, 1, 1, 1000, "Attack count minimum multiplier.");
+				ConfigWidget("Max Multiplier", f_maxMultiplier, 1, f_minMultiplier, 1000, "Attack count maximum multiplier.");
 			}
 		}
 
@@ -145,10 +145,8 @@ namespace cheat::feature
 		}
 		if (f_Randomize)
 		{
-			std::random_device rd;
-			std::mt19937 rng(rd());
-			std::uniform_int_distribution<std::mt19937::result_type> dist(f_maxMultiplier.value(), f_minMultiplier.value());
-			countOfAttacks = dist(rng);
+			countOfAttacks = RandomDistribution(f_minMultiplier, f_maxMultiplier);
+			//countOfAttacks = rand() % (f_maxMultiplier.value() - f_minMultiplier.value()) + f_minMultiplier.value();
 			return countOfAttacks;
 		}
 

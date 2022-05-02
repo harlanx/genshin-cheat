@@ -31,6 +31,12 @@ namespace cheat::feature
 		int GetAttackCount(app::LCBaseCombat* combat, uint32_t targetID, app::AttackResult* attackResult);
 	private:
 		RapidFire();
+		int RandomDistribution(int min, int max) {
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<> distr(min, max);
+			return distr(gen);
+		};
 		int CalcCountToKill(float attackDamage, uint32_t targetID);
 	};
 }
