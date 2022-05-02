@@ -46,8 +46,9 @@ DO_APP_FUNC(0x015E1C90, bool, Miscs_CheckTargetAttackable, (void* __this, BaseEn
 DO_APP_FUNC(0x024D5450, bool, HumanoidMoveFSM_CheckSprintCooldown, (/* HumanoidMoveFSM */void* __this, MethodInfo* method));
 DO_APP_FUNC(0x02548810, bool, LCAvatarCombat_IsEnergyMax, (void* __this, MethodInfo* method));
 DO_APP_FUNC(0x02546C10, bool, LCAvatarCombat_IsSkillInCD_1, (void* __this, void* skillInfo, MethodInfo* method));
+DO_APP_FUNC(0x0254A170, void, LCAvatarCombat_ChangeEnergy_1, (LCAvatarCombat* __this, ElementType__Enum type, float value, DataPropOp__Enum state, MethodInfo* method));
+DO_APP_FUNC(0x0254D660, bool, LCAvatarCombat_OnSkillStart, (LCAvatarCombat* __this, uint32_t skillID, float cdMultipler, MethodInfo* method));
 DO_APP_FUNC(0x0112A110, void, ActorAbilityPlugin_AddDynamicFloatWithRange, (void* __this, String* key, float value, float min, float max, bool forceDoAtRemote, MethodInfo* method));
-
 
 // Rapid fire
 DO_APP_FUNC(0x0318B070, void, LCBaseCombat_DoHitEntity, (LCBaseCombat* __this, uint32_t targetID, AttackResult* attackResult, bool ignoreCheckCanBeHitInMP, MethodInfo* method));
@@ -193,6 +194,7 @@ DO_APP_FUNC(0x01C6A530, bool, UIManager_1_HasEnableMapCamera, (UIManager_1* __th
 DO_APP_FUNC(0x03D64A80, void, MonoMiniMap_Update, (MonoMiniMap* __this, MethodInfo* method));
 DO_APP_FUNC(0x03992EB0, MonoMiniMap*, MonoInLevelMainPage_get_miniMap, (void* __this, MethodInfo* method));
 DO_APP_FUNC(0x02702190, void, GadgetModule_OnGadgetInteractRsp, (void* __this, GadgetInteractRsp* notify, MethodInfo* method));
+DO_APP_FUNC(0x010A60C0, float, InLevelMainPageContext_get_miniMapScale, (InLevelMainPageContext* __this, MethodInfo* method));
 
 // UnityEngine
 DO_APP_FUNC(0x073C1A30, void, RenderSettings_set_fog, (void* __this, bool value, MethodInfo* method));

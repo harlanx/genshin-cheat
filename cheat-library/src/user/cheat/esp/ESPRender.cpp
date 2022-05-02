@@ -17,17 +17,9 @@ namespace cheat::feature::esp::render
 	static ImVec2 s_ScreenResolution = ImVec2(0, 0);
 	static ImVec2 s_AvatarPosition = ImVec2(0, 0);
 
-// Adding delaying helps to improve performance
-#define UPDATE_DELAY_VAR(delay) static ULONGLONG s_LastUpdate = 0;\
-                            ULONGLONG currentTime = GetTickCount();\
-                            if (s_LastUpdate + delay > currentTime)\
-                                return;\
-                            s_LastUpdate = currentTime;
-
-
 	static void UpdateMainCamera()
 	{
-		UPDATE_DELAY_VAR(1000);
+		UPDATE_DELAY(1000);
 
 		s_Camera = nullptr;
 
@@ -47,7 +39,7 @@ namespace cheat::feature::esp::render
 
 	static void UpdateResolutionScale()
 	{
-		UPDATE_DELAY_VAR(1000);
+		UPDATE_DELAY(1000);
 
 		SAFE_BEGIN();
 		s_ResolutionScale = { 0, 0 };
@@ -440,10 +432,10 @@ namespace cheat::feature::esp::render
 		switch (esp.f_DrawBoxMode.value())
 		{
 		case ESP::DrawMode::Box:
-			rect = DrawBox(entity, color);
+			rect = DrawBox(entity, esp.f_ApplyGlobalColor ? esp.f_BoxColor : color);
 			break;
 		case ESP::DrawMode::Rectangle:
-			rect = DrawRect(entity, color);
+			rect = DrawRect(entity, esp.f_ApplyGlobalColor ? esp.f_RectColor : color);
 			break;
 		default:
 			rect = {};
@@ -451,15 +443,10 @@ namespace cheat::feature::esp::render
 		}
 
 		if (esp.f_DrawLine)
-			DrawLine(entity, color);
+			DrawLine(entity, esp.f_ApplyGlobalColor ? esp.f_LineColor : color);
 
 		if (esp.f_DrawName)
-		{
-			ImColor nameColor = color;
-			if (esp.f_ApplyGlobalFontColor)
-				nameColor = esp.f_FontColor;
-			DrawName(rect, entity, name, nameColor);
-		}
+			DrawName(rect, entity, name, esp.f_ApplyGlobalColor ? esp.f_FontColor : color);
 
 		return HasCenter(rect);
 		SAFE_ERROR();

@@ -9,7 +9,9 @@ namespace cheat::feature
 	class AutoLoot : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
+		config::Field<config::ToggleHotkey> f_AutoLoot;
+		config::Field<config::ToggleHotkey> f_OpenChest;
+
 		config::Field<int> f_DelayTime;
 		config::Field<bool> f_UseCustomRange;
 		config::Field<float> f_CustomRange;

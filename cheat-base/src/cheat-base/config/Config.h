@@ -61,4 +61,6 @@ namespace config
 	void ChangeProfile(const std::string& profileName);
 	std::vector<std::string> const& GetProfiles();
 	std::string const& CurrentProfileName();
+
+	extern TEvent<> ProfileChanged;
 }

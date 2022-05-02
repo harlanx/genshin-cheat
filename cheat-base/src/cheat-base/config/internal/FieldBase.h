@@ -70,6 +70,16 @@ namespace config::internal
 			p_Container->FireChanged();
 		}
 
+		void repos(const std::string& newSection, bool shared = false)
+		{
+			p_Container->Reposition(newSection, shared);
+		}
+
+		void move(const std::string& newSection, bool shared = false)
+		{
+			p_Container->Move(newSection, shared);
+		}
+
 		FieldBase<T>& operator=(const T& other)
 		{
 			p_Container->m_Value = other;

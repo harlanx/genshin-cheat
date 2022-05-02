@@ -30,7 +30,10 @@ namespace cheat::feature
 
 		config::Field<float> f_FontSize;
 		config::Field<ImColor> f_FontColor;
-		config::Field<bool> f_ApplyGlobalFontColor;
+		config::Field<ImColor> f_BoxColor;
+		config::Field<ImColor> f_RectColor;
+		config::Field<ImColor> f_LineColor;
+		config::Field<bool> f_ApplyGlobalColor;
 
 		config::Field<float> f_MinSize;
 		config::Field<float> f_Range;

@@ -15,65 +15,72 @@
 
 #include "cheat-base/cheat/CheatManagerBase.h"
 
-namespace cheat::feature 
+namespace cheat::feature
 {
 
 	ESP::ESP() : Feature(),
 		NF(f_Enabled, "ESP", "ESP", false),
 
-        NF(f_DrawBoxMode, "Draw Mode", "ESP", DrawMode::Box),
-        NF(f_Fill, "Fill Box/Rectangle", "ESP", false),
-        NF(f_FillTransparency, "Fill Transparency", "ESP", 0.5f),
+		NF(f_DrawBoxMode, "Draw Mode", "ESP", DrawMode::Box),
+		NF(f_Fill, "Fill Box/Rectangle", "ESP", false),
+		NF(f_FillTransparency, "Fill Transparency", "ESP", 0.5f),
 
 		NF(f_DrawLine, "Draw Line", "ESP", false),
-        NF(f_DrawDistance, "Draw Distance", "ESP", false),
-        NF(f_DrawName, "Draw Name", "ESP", false),
+		NF(f_DrawDistance, "Draw Distance", "ESP", false),
+		NF(f_DrawName, "Draw Name", "ESP", false),
 
-        NF(f_FontSize, "Font Size", "ESP", 12.0f),
-        NF(f_FontColor, "Font Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_ApplyGlobalFontColor, "Apply Global Font Colors", "ESP", false),
+		NF(f_FontSize, "Font Size", "ESP", 12.0f),
+		NF(f_FontColor, "Font Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_ApplyGlobalColor, "Apply Global Colors", "ESP", false),
 
-        NF(f_MinSize, "Min. Entity Size", "ESP", 0.5f),
+		NF(f_BoxColor, "Box Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_LineColor, "Line Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_RectColor, "Rect Color", "ESP", ImColor(255, 255, 255)),
+
+		NF(f_MinSize, "Min. Entity Size", "ESP", 0.5f),
 		NF(f_Range, "Range", "ESP", 100.0f),
 		m_Search({})
-    {
+	{
 		cheat::events::KeyUpEvent += MY_METHOD_HANDLER(ESP::OnKeyUp);
 		InstallFilters();
 	}
 
 
-    const FeatureGUIInfo& ESP::GetGUIInfo() const
-    {
-        static const FeatureGUIInfo info { "", "ESP", false };
-        return info;
-    }
+	const FeatureGUIInfo& ESP::GetGUIInfo() const
+	{
+		static const FeatureGUIInfo info{ "", "ESP", false };
+		return info;
+	}
 
-    void ESP::DrawMain()
-    {
+	void ESP::DrawMain()
+	{
 		BeginGroupPanel("General", ImVec2(-1, 0));
 
 		ConfigWidget("ESP Enabled", f_Enabled, "Show filtered object through obstacles.");
-        ConfigWidget("Range (m)", f_Range, 1.0f, 1.0f, 200.0f);
-        
-        ConfigWidget(f_DrawBoxMode, "Select the mode of box drawing.");
+		ConfigWidget("Range (m)", f_Range, 1.0f, 1.0f, 200.0f);
+
+		ConfigWidget(f_DrawBoxMode, "Select the mode of box drawing.");
 		ConfigWidget(f_Fill);
 		ConfigWidget(f_FillTransparency, 0.01f, 0.0f, 1.0f, "Transparency of filled part.");
 
-        ImGui::Spacing();
-        ConfigWidget(f_DrawLine,     "Show line from character to object on screen.");
-        ConfigWidget(f_DrawName,     "Draw name of object.");
-        ConfigWidget(f_DrawDistance, "Draw distance of object.");
+		ImGui::Spacing();
+		ConfigWidget(f_DrawLine, "Show line from character to object on screen.");
+		ConfigWidget(f_DrawName, "Draw name of object.");
+		ConfigWidget(f_DrawDistance, "Draw distance of object.");
 
-        ImGui::Spacing();
-        ConfigWidget(f_FontSize, 0.05f, 1.0f, 100.0f, "Font size of name or distance.");
-        ConfigWidget(f_FontColor, "Color of line, name, or distance text font.");
-		ConfigWidget(f_ApplyGlobalFontColor, "Override all color settings with above font color setting.\n" \
+		ImGui::Spacing();
+		ConfigWidget(f_FontSize, 0.05f, 1.0f, 100.0f, "Font size of name or distance.");
+		ConfigWidget(f_FontColor, "Color of line, name, or distance text font.");
+		ConfigWidget(f_BoxColor, "Color of box font.");
+		ConfigWidget(f_LineColor, "Color of line font.");
+		ConfigWidget(f_RectColor, "Color of rectangle font.");
+		ConfigWidget(f_ApplyGlobalColor, "Override all color settings with above color setting.\n" \
 			"Turn off to revert to custom settings.");
 
-        ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, "Minimum entity size as measured in-world.\n" \
-            "Some entities have either extremely small or no bounds at all.\n" \
+		ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, "Minimum entity size as measured in-world.\n" \
+			"Some entities have either extremely small or no bounds at all.\n" \
 			"This parameter helps filter out entities that don't meet this condition.");
-		
+
 		EndGroupPanel();
 
 		ImGui::Text("How to use item filters:\n\tLMB - Toggle visibility\n\tRMB - Open color picker");
@@ -85,30 +92,30 @@ namespace cheat::feature
 			DrawSection(section, filters);
 			ImGui::PopID();
 		}
-    }
+	}
 
-    bool ESP::NeedStatusDraw() const
+	bool ESP::NeedStatusDraw() const
 	{
-        return f_Enabled;
-    }
+		return f_Enabled;
+	}
 
-    void ESP::DrawStatus() 
-    { 
-        ImGui::Text("ESP [%.01fm|%s|%s%s%s%s]", 
-			f_Range.value(), 
-            f_DrawBoxMode.value() == DrawMode::Box ? "Box" : f_DrawBoxMode.value() == DrawMode::Rectangle ? "Rect" : "None",
-            f_Fill ? "F" : "", 
-            f_DrawLine ? "L" : "",
+	void ESP::DrawStatus()
+	{
+		ImGui::Text("ESP [%.01fm|%s|%s%s%s%s]",
+			f_Range.value(),
+			f_DrawBoxMode.value() == DrawMode::Box ? "Box" : f_DrawBoxMode.value() == DrawMode::Rectangle ? "Rect" : "None",
+			f_Fill ? "F" : "",
+			f_DrawLine ? "L" : "",
 			f_DrawName ? "N" : "",
 			f_DrawDistance ? "D" : ""
 		);
-    }
+	}
 
-    ESP& ESP::GetInstance()
-    {
-        static ESP instance;
-        return instance;
-    }
+	ESP& ESP::GetInstance()
+	{
+		static ESP instance;
+		return instance;
+	}
 
 	void ESP::AddFilter(const std::string& section, const std::string& name, game::IEntityFilter* filter)
 	{
@@ -117,24 +124,24 @@ namespace cheat::feature
 
 		auto& filters = m_Sections[section];
 		esp::ESPItem newItem(name, ImColor(120, 120, 120, 255), {}, name);
-		filters.push_back({ config::CreateField<esp::ESPItem>(name, name, fmt::format("ESP::Filters::{}", section), false, newItem), filter});
+		filters.push_back({ config::CreateField<esp::ESPItem>(name, name, fmt::format("ESP::Filters::{}", section), false, newItem), filter });
 	}
 
 	void ESP::DrawSection(const std::string& section, const Filters& filters)
 	{
 		std::vector<const FilterInfo*> validFilters;
-				
-		for (auto& info: filters)
+
+		for (auto& info : filters)
 		{
-            const auto& filterName = info.first.value().m_Name;
+			const auto& filterName = info.first.value().m_Name;
 
-            auto it = std::search(
-                filterName.begin(), filterName.end(),
-                m_Search.begin(), m_Search.end(),
-                [](char ch1, char ch2) { return std::tolower(ch1) == std::tolower(ch2); }
-            );
+			auto it = std::search(
+				filterName.begin(), filterName.end(),
+				m_Search.begin(), m_Search.end(),
+				[](char ch1, char ch2) { return std::tolower(ch1) == std::tolower(ch2); }
+			);
 
-            if (it != filterName.end())
+			if (it != filterName.end())
 				validFilters.push_back(&info);
 		}
 
@@ -300,7 +307,7 @@ namespace cheat::feature
 		const bool rmb_click = hovered && io.MouseClicked[ImGuiMouseButton_Right];
 
 		ImGuiWindow* picker_active_window = NULL;
-		
+
 		static bool color_changed = false;
 		static ImGuiID opened_id = 0;
 		if (rmb_click)
@@ -336,7 +343,7 @@ namespace cheat::feature
 
 		const ImU32 border_color = ImGui::GetColorU32(g.ActiveId == id ? ImGuiCol_FrameBgActive : hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
 		const ImRect clip_rect(frame_bb.Min.x, frame_bb.Min.y, frame_bb.Min.x + item_size.x, frame_bb.Min.y + item_size.y); // Not using frame_bb.Max because we have adjusted size
-		
+
 		float border_size = 2.0f;
 		float border_rounding = 10.0f;
 
@@ -362,11 +369,11 @@ namespace cheat::feature
 			window->DrawList->AddImageRounded(image, image_start, image_start + ImVec2(icon_size, icon_size), { 0.0f, 0.0f }, { 1.0f, 1.0f },
 				ImColor(1.0f, 1.0f, 1.0f), 0.3f);
 
-		bool pushed = ImGui::PushStyleColorWithContrast(field.value().m_Color, ImGuiCol_Text, ImColor(0,0,0), 2.0f);
+		bool pushed = ImGui::PushStyleColorWithContrast(field.value().m_Color, ImGuiCol_Text, ImColor(0, 0, 0), 2.0f);
 
 		ImVec2 text_end(frame_bb.Max.x - style.FramePadding.x - border_size, y_center + label_size.y / 2);
 		ImVec2 text_start(ImMax(image_end.x + style.FramePadding.x, text_end.x - label_size.x), y_center - label_size.y / 2);
-		ImGui::RenderTextClipped(text_start, text_end, label, NULL, NULL, {0, 0}, &clip_rect);
+		ImGui::RenderTextClipped(text_start, text_end, label, NULL, NULL, { 0, 0 }, &clip_rect);
 
 		if (pushed)
 			ImGui::PopStyleColor();
@@ -624,4 +631,3 @@ namespace cheat::feature
 	}
 #undef ADD_FILTER_FIELD
 }
-

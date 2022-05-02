@@ -29,4 +29,6 @@ namespace cheat::game
 
 	game::Entity* FindNearestEntity(const IEntityFilter& filter);
 	game::Entity* FindNearestEntity(std::vector<game::Entity*>& entities);
+
+	app::AccountDataItem* GetAccountData();
 }

@@ -115,4 +115,13 @@ namespace cheat::game
 		return *std::min_element(entities.begin(), entities.end(),
 			[avatar](game::Entity* a, game::Entity* b) { return avatar->distance(a) < avatar->distance(b); });
 	}
+
+	app::AccountDataItem* GetAccountData()
+	{
+		auto playerModule = GET_SINGLETON(PlayerModule);
+		if (playerModule == nullptr || playerModule->fields._accountData_k__BackingField == nullptr)
+			return nullptr;
+
+		return playerModule->fields._accountData_k__BackingField;
+	}
 }

@@ -10125,13 +10125,13 @@ namespace app {
 		struct RectTransform* _grpMiniBackRotate;
 		struct Image* _imgMiniBack;
 		float _areaMinDistance;
-		struct Queue_1_MoleMole_MonoMapMark_* LMMANOILMOH;
-		struct MonoMapMark* EBLFANFFMGM;
+		struct Queue_1_MoleMole_MonoMapMark_* _unusedMarkPool;
+		struct MonoMapMark* _markPrefab;
 		struct RectTransform* _hazardousArea;
-		float KJNIFJIIJBC;
-		float HOODCADEJHE;
-		bool CODJAKHFFLB;
-		struct IGKEDHHIDMA* DLJNLLBFMCP;
+        float _warningCooldown;
+        float _warningTime;
+        bool _isWarning;
+		struct InLevelMainPageContext* context;
 	};
 
 	struct MonoMiniMap {
@@ -10353,6 +10353,84 @@ namespace app {
 		MonitorData* monitor;
 		struct FishBattleEndRsp__Fields fields;
 	};
+
+
+
+    #if defined(_CPLUSPLUS_)
+        enum class DataPropOp__Enum : int32_t {
+            Reset = 0x00000000,
+            Change = 0x00000001,
+        };
+    #else
+        enum DataPropOp__Enum {
+            DataPropOp__Enum_Reset = 0x00000000,
+            DataPropOp__Enum_Change = 0x00000001,
+        };
+
+    #endif
+
+    struct __declspec(align(8)) NormalTimer__Fields {
+        float _timer_k__BackingField;
+        float _timespan_k__BackingField;
+        bool _isTimeUp_k__BackingField;
+        bool _isActive_k__BackingField;
+        struct Action* timeupAction;
+        bool fromCache;
+    };
+
+    struct NormalTimer {
+        struct NormalTimer__Class* klass;
+        MonitorData* monitor;
+        struct NormalTimer__Fields fields;
+    };
+
+    struct EntityTimer__Fields {
+        struct NormalTimer__Fields _;
+        struct BaseEntity* _timeScaleEntity;
+        bool _ignoreTimeScale;
+    };
+
+    struct EntityTimer {
+        struct EntityTimer__Class* klass;
+        MonitorData* monitor;
+        struct EntityTimer__Fields fields;
+    };
+
+    struct LCCharacterCombat__Fields {
+        struct LCBaseCombat__Fields _;
+        struct Dictionary_2_System_UInt32_MoleMole_LCCharacterCombat_NOCCPOEFFII_* _summonInfos;
+    };
+
+    struct LCCharacterCombat {
+        struct LCCharacterCombat__Class* klass;
+        MonitorData* monitor;
+        struct LCCharacterCombat__Fields fields;
+    };
+
+    struct LCAvatarCombat__Fields {
+        struct LCCharacterCombat__Fields _;
+        struct EntityTimer* _targetAtteTimer;
+        struct EntityTimer* _targetFixTimer;
+        struct AvatarSkillDepotExcelConfig* _skillDepotConfig;
+        bool toDoChargeSkill;
+        struct LCAvatarCombat_OMIIMOJOHIP__Array* _currSkills;
+        struct Dictionary_2_System_UInt32_MoleMole_SafeFloat_* _equipAffixCD;
+        int32_t _attackModeTriggerID;
+        struct Dictionary_2_System_UInt32_MoleMole_LCAvatarCombat_OMIIMOJOHIP_* _skillInfoMap;
+        struct List_1_UniRx_Tuple_2__3* _affixToAdd;
+        struct BaseShape2d* _curLockTargetShape;
+        struct SimpleSafeFloat__Array* _curLockTargetWeightParams;
+        void* _lockTargetOverrideParams;
+        struct List_1_MoleMole_LCAvatarCombat_OGAACDHEDLA_* meleeBuckets;
+        struct List_1_MoleMole_LCAvatarCombat_OGAACDHEDLA_* rangedBuckets;
+        struct Dictionary_2_System_UInt32_List_1_System_UInt32_* _curSkillCDSlot;
+    };
+
+    struct LCAvatarCombat {
+        struct LCAvatarCombat__Class* klass;
+        MonitorData* monitor;
+        struct LCAvatarCombat__Fields fields;
+    };
 
 #if !defined(_GHIDRA_) && !defined(_IDA_)
 }

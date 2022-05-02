@@ -13,14 +13,17 @@ namespace cheat::feature
     {
 	public:
 		config::Field<config::ToggleHotkey> f_Enabled;
+
 		config::Field<config::ToggleHotkey> f_IncludeMonsters;
 		config::Field<bool> f_MonsterCommon;
 		config::Field<bool> f_MonsterElites;
 		config::Field<bool> f_MonsterBosses;
+
 		config::Field<config::ToggleHotkey> f_IncludeAnimals;
 		config::Field<bool> f_AnimalDrop;
 		config::Field<bool> f_AnimalPickUp;
 		config::Field<bool> f_AnimalNPC;
+
 		config::Field<float> f_Speed;
 		config::Field<float> f_Radius;
 		config::Field<float> f_Distance;
@@ -37,9 +40,13 @@ namespace cheat::feature
 	
 		void OnGameUpdate();
 	private:
+		
+		std::vector<game::IEntityFilter*> m_Filters;
 		MobVacuum();
-		auto CombineFilters();
-		bool IsEntityForVac(cheat::game::Entity* entity, std::vector<game::SimpleFilter> filters);
+
+		void UpdateFilters();
+
+		bool IsEntityForVac(cheat::game::Entity* entity);
 		void OnMoveSync(uint32_t entityId, app::MotionInfo* syncInfo);
 		app::Vector3 CalcMobVacTargetPos();
 	};

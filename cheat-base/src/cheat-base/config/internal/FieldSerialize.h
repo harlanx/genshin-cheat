@@ -23,7 +23,10 @@ namespace config::internal
 		void FromJson(const nlohmann::json& jObject) override
 		{
 			if (jObject.empty())
+			{
+				m_Value = m_DefaultValue;
 				return;
+			}
 
 			converters::FromJson(m_Value, jObject);
 		}

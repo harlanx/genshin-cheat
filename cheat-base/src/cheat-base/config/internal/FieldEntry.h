@@ -12,7 +12,10 @@ namespace config::internal
 			: m_FriendName(friendlyName), m_Name(name), m_Section(sectionName), m_MultiProfile(multiProfile), m_Container(nullptr) {}
 
 		TEvent<FieldEntry*> ChangedEvent;
-		virtual void FireChanged()
+		TEvent<FieldEntry*, const std::string&, bool> MovedEvent;
+		TEvent<FieldEntry*, const std::string&, bool> RepositionEvent;
+
+		inline virtual void FireChanged()
 		{
 			ChangedEvent(this);
 		}
@@ -21,32 +24,54 @@ namespace config::internal
 		virtual void FromJson(const nlohmann::json& value) = 0;
 		virtual void Reset() = 0;
 
-		bool IsShared() const
+		inline bool IsShared() const
 		{
 			return m_MultiProfile;
 		}
 
-		std::string GetName() const
+		inline std::string GetName() const
 		{
 			return m_Name;
 		}
 
-		std::string GetFriendName() const
+		inline std::string GetFriendName() const
 		{
 			return m_FriendName;
 		}
 
-		std::string GetSection() const
+		inline std::string GetSection() const
 		{
 			return m_Section;
 		}
 
-		nlohmann::json* GetContainer() const
+		inline nlohmann::json* GetContainer() const
 		{
 			return m_Container;
 		}
 
-		void SetContainer(nlohmann::json* newContainer)
+		inline void Reposition(const std::string& newSection, bool shared = false)
+		{
+			std::string oldSection = m_Section;
+			bool oldMultiProfile = m_MultiProfile;
+
+			m_Section = newSection;
+			m_MultiProfile = shared;
+
+			RepositionEvent(this, newSection, shared);
+		}
+
+		inline void Move(const std::string& newSection, bool shared = false)
+		{
+			std::string oldSection = m_Section;
+			bool oldMultiProfile = m_MultiProfile;
+
+			m_Section = newSection;
+			m_MultiProfile = shared;
+
+			MovedEvent(this, oldSection, oldMultiProfile);
+		}
+
+		inline void SetContainer(nlohmann::json* newContainer)
 		{
 			m_Container = nullptr;
 		}

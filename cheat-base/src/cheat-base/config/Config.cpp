@@ -9,6 +9,8 @@
 
 namespace config
 {
+	TEvent<> ProfileChanged;
+
 	static std::filesystem::path s_Filepath;
 	static nlohmann::json s_ConfigRoot;
 	static nlohmann::json s_EmptyJObject = nlohmann::json::object();
@@ -149,22 +151,29 @@ namespace config
 		return fieldContainer;
 	}
 
-	void RemoveFieldContainer(internal::FieldEntry* field)
+	void RemoveFieldContainer(internal::FieldEntry* field, const std::string& section, const std::string& name, bool shared)
 	{
+		field->SetContainer(nullptr);
+
 		nlohmann::json* rootContainer = s_ProfileRoot;
-		if (field->IsShared())
+		if (shared)
 			rootContainer = s_SharedRoot;
 
-		auto sectionParts = util::StringSplit("::", field->GetSection());
+		auto sectionParts = util::StringSplit("::", section);
 		std::list<std::pair<std::string, nlohmann::json*>> nodePath;
 		for (auto& part : sectionParts)
 		{
+			if (!(*rootContainer).contains(part))
+				return;
+
 			nodePath.push_front({ part, rootContainer });
 			rootContainer = &(*rootContainer)[part];
 		}
 
-		field->SetContainer(nullptr);
-		rootContainer->erase(field->GetName());
+		if (!rootContainer->contains(name))
+			return;
+
+		rootContainer->erase(name);
 		for (auto& [key, node] : nodePath)
 		{
 			if (!(*node)[key].empty())
@@ -196,7 +205,7 @@ namespace config
 
 		auto jObject = field->ToJson();
 		if (jObject.empty())
-			RemoveFieldContainer(field);
+			RemoveFieldContainer(field, field->GetSection(), field->GetName(), field->IsShared());
 		else
 			fieldContainer = jObject;
 	}
@@ -215,11 +224,25 @@ namespace config
 		Save();
 	}
 
+	void OnFieldMoved(internal::FieldEntry* field, const std::string& oldSection, bool oldShared)
+	{
+		RemoveFieldContainer(field, oldSection, field->GetName(), oldShared);
+		OnFieldChanged(field);
+	}
+
+	void OnFieldReposition(internal::FieldEntry* field, const std::string& oldSection, bool oldShared)
+	{
+		field->SetContainer(nullptr);
+		UpdateField(field);
+	}
+
 	void internal::AddField(std::shared_ptr<FieldEntry> field)
 	{
 		s_Entries.push_back(field);
 		UpdateField(field.get());
 		field->ChangedEvent += FREE_METHOD_HANDLER(OnFieldChanged);
+		field->MovedEvent += FREE_METHOD_HANDLER(OnFieldMoved);
+		field->RepositionEvent += FREE_METHOD_HANDLER(OnFieldReposition);
 	}
 
 	void Refresh()
@@ -344,6 +367,8 @@ namespace config
 		s_ConfigRoot["current_profile"] = profileName;
 		UpdateNotShared();
 		Save();
+
+		ProfileChanged();
 	}
 
 	std::vector<std::string> const& GetProfiles()

@@ -91,7 +91,6 @@ namespace cheat
 		void DrawProfileLine() final;
 		void DrawPseudoRename(uint32_t userID);
 
-		void OnAccountChanged();
-		void OnGameUpdate();
+		void OnAccountChanged(uint32_t userID);
 	};
 }

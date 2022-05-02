@@ -4,5 +4,6 @@
 namespace cheat::events
 {
 	TEvent<> GameUpdateEvent{};
+	TEvent<uint32_t> AccountChangedEvent{};
 	TEvent<uint32_t, app::MotionInfo*> MoveSyncEvent{};
 }

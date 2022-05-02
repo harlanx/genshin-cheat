@@ -3,7 +3,6 @@
 
 namespace cheat::feature 
 {
-
 	class Debug : public Feature
     {
 	public:

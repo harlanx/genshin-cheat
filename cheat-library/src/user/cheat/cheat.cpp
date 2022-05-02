@@ -56,8 +56,6 @@ namespace cheat
 		auto& protectionBypass = feature::ProtectionBypass::GetInstance();
 		protectionBypass.Init();
 
-		InstallEventHooks();
-
 		GenshinCM& manager = GenshinCM::instance();
 
 #define FEAT_INST(name) &feature::##name##::GetInstance()
@@ -119,12 +117,32 @@ namespace cheat
 			LOG_WARNING("Failed to get font from resources.");
 
 		manager.Init(pFontData, dFontSize);
+
+		InstallEventHooks();
+	}
+
+	static void CheckAccountChanged()
+	{
+		UPDATE_DELAY(2000U);
+
+		static uint32_t _lastUserID = 0;
+
+		auto playerModule = GET_SINGLETON(PlayerModule);
+		if (playerModule == nullptr || playerModule->fields._accountData_k__BackingField == nullptr)
+			return;
+
+		auto& accountData = playerModule->fields._accountData_k__BackingField->fields;
+		if (_lastUserID != accountData.userId)
+			events::AccountChangedEvent(accountData.userId);
+
+		_lastUserID = accountData.userId;
 	}
 
 	static void GameManager_Update_Hook(app::GameManager* __this, MethodInfo* method)
 	{
 		SAFE_BEGIN();
 		events::GameUpdateEvent();
+		CheckAccountChanged();
 		SAFE_EEND();
 		
 		callOrigin(GameManager_Update_Hook, __this, method);

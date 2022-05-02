@@ -11,9 +11,20 @@ namespace cheat::feature
 	class InteractiveMap : public Feature
     {
 	public:
+		enum class SaveAttachType
+		{
+			Account,
+			Profile,
+			Global
+		};
+
 		config::Field<config::ToggleHotkey> f_Enabled;
 		config::Field<bool> f_SeparatedWindows;
 		config::Field<bool> f_CompletionLogShow;
+
+		config::Field<config::Enum<SaveAttachType>> f_STFixedPoints;
+		config::Field<config::Enum<SaveAttachType>> f_STCustomPoints;
+		config::Field<config::Enum<SaveAttachType>> f_STCompletedPoints;
 
 		config::Field<float> f_IconSize;
 		config::Field<float> f_MinimapIconSize;
@@ -24,9 +35,10 @@ namespace cheat::feature
 		config::Field<float> f_CompletePointTransparency;
 
 		config::Field<bool> f_AutoDetectNewItems;
-		config::Field<bool> f_NewItemsDetectOnlyShowed;
-		config::Field<float> f_NewItemsDetectRange;
-		config::Field<int> f_NewItemsDetectingDelay;
+		config::Field<bool> f_AutoFixItemPositions;
+		config::Field<bool> f_ObjectCheckOnlyShowed;
+		config::Field<float> f_ObjectDetectRange;
+		config::Field<int> f_CheckObjectsDelay;
 
 		config::Field<bool> f_AutoDetectGatheredItems;
 		config::Field<float> f_GatheredItemsDetectRange;
@@ -55,8 +67,11 @@ namespace cheat::feature
 			bool completed;
 			int64_t completeTimestamp;
 
-			bool isCustom;
+			bool custom;
 			int64_t creationTimestamp;
+
+			bool fixed;
+			app::Vector2 originPosition;
 		};
 
 		// std::optional<PointData> GetSelectedPoint();
@@ -69,6 +84,9 @@ namespace cheat::feature
 		void CompletePoint(PointData* pointData);
 		void UncompletePoint(PointData* pointData);
 		void RevertLatestPointCompleting();
+
+		void FixPointPosition(PointData* pointData, app::Vector2 fixedPosition);
+		void UnfixPoitnPosition(PointData* pointData);
 
 		void AddCustomPoint(uint32_t sceneID, uint32_t labelID, app::Vector2 levelPosition);
 		void RemoveCustomPoint(PointData* pointData);
@@ -117,10 +135,15 @@ namespace cheat::feature
 		std::map<uint32_t, SceneData> m_ScenesData;
 
 		std::mutex m_UserDataMutex; // Support multithread
-		config::Field<nlohmann::json> f_UserPointsData;
-		config::Field<uint32_t> f_CustomPointIndex; // Stores last index for new custom points
+		config::Field<nlohmann::json> f_CustomPointsJson;
+		config::Field<nlohmann::json> f_FixedPointsJson;
+		config::Field<nlohmann::json> f_CompletedPointsJson;
 		
+		config::Field<uint32_t> f_CustomPointIndex; // Stores last index for new custom points
+		config::Field<uint32_t> f_LastUserID;
+
 		std::unordered_set<PointData*> m_CustomPoints;
+		std::unordered_set<PointData*> m_FixedPoints;
 		std::unordered_set<PointData*> m_CompletedPoints;
 
 		std::mutex m_PointMutex;
@@ -146,15 +169,45 @@ namespace cheat::feature
 		void InitializeGatherDetectItems();
 
 		// Loading user data
-		void LoadUserData();
-		void SaveUserData();
+		using ResetElementFunc = bool (InteractiveMap::*)(LabelData* labelData, PointData* point);
+		using LoadElementFunc = void (InteractiveMap::*)(LabelData* labelData, const nlohmann::json& data);
+		using SaveElementFunc = void (InteractiveMap::*)(nlohmann::json& jObject, PointData* point);
+
+		void ResetUserData(ResetElementFunc func);
+		void LoadUserData(const nlohmann::json& data, LoadElementFunc func);
+		void SaveUserData(nlohmann::json& data, SaveElementFunc func);
 
 		void LoadCompletedPointData(LabelData* labelData, const nlohmann::json& data);
-		static void SaveCompletedPointData(nlohmann::json& jObject, PointData* point);
+		void SaveCompletedPointData(nlohmann::json& jObject, PointData* point);
+		bool ResetCompletedPointData(LabelData* label, PointData* point);
 		
 		void LoadCustomPointData(LabelData* labelData, const nlohmann::json& data);
-		static void SaveCustomPointData(nlohmann::json& jObject, PointData* point);
-		
+		void SaveCustomPointData(nlohmann::json& jObject, PointData* point);
+		bool ResetCustomPointData(LabelData* label, PointData* point);
+
+		void LoadFixedPointData(LabelData* labelData, const nlohmann::json& data);
+		void SaveFixedPointData(nlohmann::json& jObject, PointData* point);
+		bool ResetFixedPointData(LabelData* label, PointData* point);
+
+		void LoadCompletedPoints();
+		void SaveCompletedPoints();
+		void ResetCompletedPoints();
+
+		void LoadCustomPoints();
+		void SaveCustomPoints();
+		void ResetCustomPoints();
+
+		void LoadFixedPoints();
+		void SaveFixedPoints();
+		void ResetFixedPoints();
+
+		void CreateUserDataField(const char* name, config::Field<nlohmann::json>& field, SaveAttachType saveType);
+		void UpdateUserDataField(config::Field<nlohmann::json>& field, SaveAttachType saveType, bool move = false);
+		std::string GetUserDataFieldSection(SaveAttachType saveType);
+
+		void OnConfigProfileChanged();
+		void OnAccountChanged(uint32_t userID);
+
 		// Drawing
 		void DrawMenu();
 		void DrawFilters(const bool searchFixed = true);
@@ -171,7 +224,7 @@ namespace cheat::feature
 
 		// Detecting stuff
 		void OnGameUpdate();
-		void NewItemsDetect();
+		void CheckObjects();
 		void OnItemGathered(game::Entity* entity);
 
 		// Utility

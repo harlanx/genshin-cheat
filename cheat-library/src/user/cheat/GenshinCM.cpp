@@ -3,6 +3,7 @@
 
 #include <helpers.h>
 #include <cheat/events.h>
+#include <cheat/game/util.h>
 
 #define ACTIVE_COLOR ImColor(0.13f, 0.8f, 0.08f)
 
@@ -27,7 +28,7 @@ cheat::GenshinCM::GenshinCM() :
 	NFEX(f_AccConfig, "Account Config", "data", "General::Multi-Account", internal::AccountConfig(), true),
 	NFS(f_ShowType,   "Name show type",         "General::Multi-Account", ShowType::Pseudo)
 {
-	events::GameUpdateEvent += MY_METHOD_HANDLER(cheat::GenshinCM::OnGameUpdate);
+	events::AccountChangedEvent += MY_METHOD_HANDLER(cheat::GenshinCM::OnAccountChanged);
 }
 
 
@@ -252,8 +253,18 @@ void cheat::GenshinCM::DrawPseudoRename(uint32_t userID)
 		f_AccConfig.FireChanged();
 }
 
-void cheat::GenshinCM::OnAccountChanged()
+void cheat::GenshinCM::OnAccountChanged(uint32_t userID)
 {
+	auto accountData = game::GetAccountData();
+	if (accountData == nullptr)
+	{
+		m_CurrentAccount.userID = 0;
+		return;
+	}
+
+	m_CurrentAccount.nickName = il2cppi_to_string(accountData->fields.nickName);
+	m_CurrentAccount.userID = accountData->fields.userId;
+
 	auto& profiles = f_AccConfig.value().id2Profiles;
 	if (profiles.count(m_CurrentAccount.userID) == 0)
 		return;
@@ -265,33 +276,4 @@ void cheat::GenshinCM::OnAccountChanged()
 	ImGuiToast toast(ImGuiToastType_Info, settings.f_NotificationsDelay.value(), "Account was updated.\nConfig profile was changed.");
 	toast.set_title("Config multi-account");
 	ImGui::InsertNotification(toast);
-}
-
-#define UPDATE_DELAY(delay) \
-							static ULONGLONG s_LastUpdate = 0;       \
-                            ULONGLONG currentTime = GetTickCount64();\
-                            if (s_LastUpdate + (delay) > currentTime)  \
-                                return;                              \
-							s_LastUpdate = currentTime;
-
-void cheat::GenshinCM::OnGameUpdate()
-{
-	UPDATE_DELAY(2000U);
-
-	auto playerModule = GET_SINGLETON(PlayerModule);
-	if (playerModule == nullptr || playerModule->fields._accountData_k__BackingField == nullptr)
-	{
-		m_CurrentAccount.userID = 0;
-		return;
-	}
-
-	auto& accountData = playerModule->fields._accountData_k__BackingField->fields;
-
-	bool accountChanged = m_CurrentAccount.userID != accountData.userId;
-
-	m_CurrentAccount.nickName = il2cppi_to_string(accountData.nickName);
-	m_CurrentAccount.userID = accountData.userId;
-
-	if (accountChanged)
-		OnAccountChanged();
 }

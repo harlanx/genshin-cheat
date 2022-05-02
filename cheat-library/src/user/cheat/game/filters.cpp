@@ -91,11 +91,13 @@ namespace cheat::game::filters
 		SimpleFilter AmethystLump = { app::EntityType__Enum_1::GatherObject, "_Thundercrystal" };
 		SimpleFilter ArchaicStone = { app::EntityType__Enum_1::GatherObject, "AncientOre" };
 		SimpleFilter CorLapis = { app::EntityType__Enum_1::GatherObject, "_ElementRock" };
-		SimpleFilter CrystalChunk = { app::EntityType__Enum_1::GatherObject, "_OreCrystal" };
+		SimpleFilter CrystalChunk = { app::EntityType__Enum_1::GatherObject,
+			std::vector<std::string> { "_OreCrystal", "_ShiningCrystalOre" } };
 		SimpleFilter CrystalMarrow = { app::EntityType__Enum_1::GatherObject, "_Crystalizedmarrow" };
 		SimpleFilter ElectroCrystal = { app::EntityType__Enum_1::GatherObject, "_OreElectricRock" };
 		SimpleFilter IronChunk = { app::EntityType__Enum_1::GatherObject, "_OreStone" };
-		SimpleFilter NoctilucousJade = { app::EntityType__Enum_1::GatherObject, "_OreNightBerth" };
+		SimpleFilter NoctilucousJade = { app::EntityType__Enum_1::GatherObject,
+			std::vector<std::string> { "_OreNightBerth", "_ShiningNightBerthOre" } };
 		SimpleFilter MagicalCrystalChunk = { app::EntityType__Enum_1::GatherObject, "_OreMagicCrystal" };
 		SimpleFilter ScarletQuartz = { app::EntityType__Enum_1::GatherObject, "_OreDulinsBlood" };
 		SimpleFilter StarSilver = { app::EntityType__Enum_1::GatherObject, "_OreMoonMeteor" };
@@ -118,7 +120,7 @@ namespace cheat::game::filters
 		SimpleFilter RuinGuard = { app::EntityType__Enum_1::Monster, "_Defender" };
 		SimpleFilter RuinHunter = { app::EntityType__Enum_1::Monster, "_Formathr" };
 		SimpleFilter RuinGrader = { app::EntityType__Enum_1::Monster, "_Konungmathr" };
-		SimpleFilter RuinSentinel = { app::EntityType__Enum_1::Monster, std::vector<std::string> {"_Apparatus_Enigma" } };
+		SimpleFilter RuinSentinel = { app::EntityType__Enum_1::Monster, "_Apparatus_Enigma" };
 		SimpleFilter Samachurl = { app::EntityType__Enum_1::Monster, "_Shaman" };
 	    SimpleFilter ShadowyHusk = { app::EntityType__Enum_1::Monster, "ForlornVessel_Strong" };
 		SimpleFilter Slime = { app::EntityType__Enum_1::Monster, "_Slime" };

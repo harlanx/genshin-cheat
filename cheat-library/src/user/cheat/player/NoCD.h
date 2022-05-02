@@ -7,9 +7,12 @@ namespace cheat::feature
 	class NoCD : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_InstantBow;
-		config::Field<config::ToggleHotkey> f_Ability;
+		config::Field<config::ToggleHotkey> f_AbilityReduce;
+		config::Field<float> f_AbilityReduceValue;
+
+		config::Field<config::ToggleHotkey> f_UtimateMaxEnergy;
 		config::Field<config::ToggleHotkey> f_Sprint;
+		config::Field<config::ToggleHotkey> f_InstantBow;
 
 		static NoCD& GetInstance();
 
