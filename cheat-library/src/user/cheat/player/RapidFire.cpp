@@ -69,6 +69,8 @@ namespace cheat::feature
 
 		ConfigWidget("Multi-target", f_MultiTarget, "Enables multi-target attacks within specified radius of target.\n" \
 			"All valid targets around initial target will be hit based on setting.\n" \
+			"Damage numbers will only appear on initial target but all valid targets are damaged.\n" \
+			"If multi-hit is off and there are still multiple numbers on a single target, check the Entity Manager in the Debug section to see if there are invisible entities.\n" \
 			"This can cause EXTREME lag and quick bans if used with multi-hit. You are warned."
 		);
 	
@@ -188,7 +190,6 @@ namespace cheat::feature
 	static void LCBaseCombat_DoHitEntity_Hook(app::LCBaseCombat* __this, uint32_t targetID, app::AttackResult* attackResult,
 		bool ignoreCheckCanBeHitInMP, MethodInfo* method)
 	{
-		//SAFE_BEGIN();
 		auto attacker = game::Entity(__this->fields._._._entity);
 		RapidFire& rapidFire = RapidFire::GetInstance();
 		if (!IsAttackByAvatar(attacker) || !rapidFire.f_Enabled)
@@ -207,8 +208,14 @@ namespace cheat::feature
 			auto filteredEntities = manager.entities(game::filters::combined::Monsters);
 			for (const auto& entity : filteredEntities) {
 				auto distance = originalTarget->distance(entity);
-				if (distance <= rapidFire.f_MultiTargetRadius)
-					validEntities.push_back(entity);
+
+				if (entity->runtimeID() == targetID)
+					continue;
+
+				if (distance > rapidFire.f_MultiTargetRadius)
+					continue;
+
+				validEntities.push_back(entity);
 			}
 		}
 
@@ -218,18 +225,7 @@ namespace cheat::feature
 				for (int i = 0; i < attackCount; i++)
 					callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
 			} else callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
-
 		}
-
-		//int attackCount = rapidFire.GetAttackCount(__this, targetID, attackResult);
-		//for (int i = 0; i < attackCount; i++)
-		//	callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
-		
-		//SAFE_ERROR();
-
-		//callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
-		//
-		//SAFE_END();
 	}
 }
 
