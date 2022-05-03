@@ -148,6 +148,17 @@ namespace cheat::feature
     {
         static auto positions = new std::map<uint32_t, app::Vector3>();
 
+        // Updates filter only once if value changes from using hotkey.
+        if (f_EnabledPrevious != f_Enabled.value() ||
+            f_IncludeMonstersPrevious != f_IncludeMonsters.value() ||
+            f_IncludeAnimalsPrevious != f_IncludeAnimals.value()) {
+
+            UpdateFilters();
+            f_EnabledPrevious = f_Enabled.value();
+            f_IncludeMonstersPrevious = f_IncludeMonsters.value();
+            f_IncludeAnimalsPrevious = f_IncludeAnimals.value();
+        }
+
         if (!f_Enabled.value())
             return;
 

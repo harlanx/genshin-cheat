@@ -415,8 +415,17 @@ namespace cheat::game::filters
 			monster::Whopperflower
 		};
 		SimpleFilter MonsterEquips = { app::EntityType__Enum_1::MonsterEquip };
-		WhitelistFilter Living = {
-			std::vector<app::EntityType__Enum_1> {app::EntityType__Enum_1::EnvAnimal,app::EntityType__Enum_1::Monster},
+		BlacklistFilter Living = {
+			std::vector<app::EntityType__Enum_1> {
+				app::EntityType__Enum_1::EnvAnimal,
+				app::EntityType__Enum_1::Monster
+			},
+			std::vector<std::string> {
+					// Environmental mobs
+					"Cat", "DogPrick", "Vulpues", "Inu_Tanuki",
+						// Overworld bosses
+						"Ningyo", "Regisvine", "Hypostasis", "Planelurker", "Nithhoggr"
+					}
 		};
 		//m0nkrel: We can choose the entities we need ourselves so as not to magnetize cats, dogs, etc.
 		//AdvancedFilter Animals = { std::vector<app::EntityType__Enum_1> {app::EntityType__Enum_1::EnvAnimal, app::EntityType__Enum_1::Monster }, std::vector<std::string> {"Crane","Tit", "Boar" , "Squirrel", "Fox", "Pigeon", "Wigeon", "Falcon" ,"Marten" } };

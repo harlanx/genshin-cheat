@@ -29,6 +29,7 @@ namespace cheat::feature
 		config::Field<float> f_Distance;
 		config::Field<bool> f_OnlyTarget;
 		config::Field<bool> f_Instantly;
+		bool f_EnabledPrevious, f_IncludeMonstersPrevious, f_IncludeAnimalsPrevious;
 
 		static MobVacuum& GetInstance();
 
