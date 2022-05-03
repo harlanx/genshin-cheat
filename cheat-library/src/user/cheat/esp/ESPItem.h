@@ -21,6 +21,7 @@ namespace cheat::feature::esp
 		bool m_Enabled;
 		std::string m_Name;
 		ImColor m_Color;
+		ImColor m_ContrastColor;
 		void* m_Texture;
 	};
 }

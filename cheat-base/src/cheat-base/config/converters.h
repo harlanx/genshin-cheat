@@ -3,26 +3,6 @@
 #include <nlohmann/json.hpp>
 #include <cheat-base/Hotkey.h>
 #include <imgui.h>
-#include "fields/Enum.h"
-
-namespace nlohmann
-{
-	template <typename T>
-	struct adl_serializer<config::Enum<T>> {
-		static void to_json(json& j, const config::Enum<T>& enumValue)
-		{
-			j = {
-				{ "name", magic_enum::enum_name(enumValue.value()) },
-				{ "value", enumValue.raw() }
-			};
-		}
-
-		static void from_json(const json& j, config::Enum<T>& value)
-		{
-			value = j["value"].get<uint32_t>();
-		}
-	};
-}
 
 namespace config::converters
 {

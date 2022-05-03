@@ -8,10 +8,10 @@ namespace cheat::feature
 	class AutoDestroy : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
-		config::Field<config::ToggleHotkey> f_DestroyOres;
-		config::Field<config::ToggleHotkey> f_DestroyShields;
-		config::Field<config::ToggleHotkey> f_DestroyDoodads;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_DestroyOres;
+		config::Field<config::Toggle<Hotkey>> f_DestroyShields;
+		config::Field<config::Toggle<Hotkey>> f_DestroyDoodads;
 		config::Field<float> f_Range;
 
 		static AutoDestroy& GetInstance();

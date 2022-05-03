@@ -9,16 +9,29 @@
 
 #include <cheat-base/cheat/CheatManagerBase.h>
 
+#include "cheat-base/ResourceLoader.h"
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace renderer
 {
-	static std::unordered_set<void*> inputLockers;
+	struct Data
+	{
+		LPBYTE data;
+		DWORD size;
+	};
 
-	static ImFont* pFont;
-	
-	static LPBYTE pFontData;
-	static DWORD dFontDataSize;
+	static std::unordered_set<void*> _inputLockers;
+
+	static float _globalFontSize = 16.0f;
+	static bool _isCustomFontLoaded = false;
+
+	static constexpr int _fontSizeStep = 1;
+	static constexpr int _fontSizeMax = 64;
+	static constexpr int _fontsCount = _fontSizeMax / _fontSizeStep;
+	static std::array<ImFont*, _fontsCount> _fonts;
+
+	static Data _customFontData {};
 
 	static WNDPROC OriginalWndProcHandler;
 	static ID3D11RenderTargetView* mainRenderTargetView;
@@ -28,11 +41,9 @@ namespace renderer
 
 	void Init(LPBYTE fontData, DWORD fontDataSize)
 	{
-		pFontData = fontData;
-		dFontDataSize = fontDataSize;
+		_customFontData = { fontData, fontDataSize };
 
 		LOG_DEBUG("Initialize IMGui...");
-
 
 		backend::DX11Events::RenderEvent += FREE_METHOD_HANDLER(OnRender);
 		backend::DX11Events::InitializeEvent += FREE_METHOD_HANDLER(OnDX11Initialize);
@@ -50,19 +61,77 @@ namespace renderer
 
 	void AddInputLocker(void* id)
 	{
-		if (inputLockers.count(id) == 0)
-			inputLockers.insert(id);
+		if (_inputLockers.count(id) == 0)
+			_inputLockers.insert(id);
 	}
 
 	void RemoveInputLocker(void* id)
 	{
-		if (inputLockers.count(id) > 0)
-			inputLockers.erase(id);
+		if (_inputLockers.count(id) > 0)
+			_inputLockers.erase(id);
 	}
 
 	bool IsInputLocked()
 	{
-		return inputLockers.size() > 0;
+		return _inputLockers.size() > 0;
+	}
+
+	ImFont* GetFontBySize(float fontSize)
+	{
+		if (!_isCustomFontLoaded)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			return io.FontDefault;
+		}
+		int fontSizeInt = static_cast<int>(fontSize);
+		int fontIndex = fontSizeInt / _fontSizeStep + 
+			(fontSizeInt % _fontSizeStep > (_fontSizeStep / 2) ? 1 : 0) - 1;
+		fontIndex = std::clamp(fontIndex, 0, _fontsCount - 1);
+		return _fonts[fontIndex];
+	}
+
+	float GetScaleByFontSize(float fontSize)
+	{
+		if (!_isCustomFontLoaded)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			return fontSize / io.FontDefault->FontSize;
+		}
+
+		int fontSizeInt = static_cast<int>(fontSize);
+		int fontIndex = fontSizeInt / _fontSizeStep;
+		int fontAligned = fontIndex * _fontSizeStep + 
+			((fontSizeInt % _fontSizeStep) > _fontSizeStep / 2 ? _fontSizeStep : 0);
+		fontAligned = std::clamp(fontAligned, _fontSizeStep, _fontSizeMax);
+
+		return fontSize / static_cast<float>(fontAligned);
+	}
+
+	void SetGlobalFontSize(float globalFontSize)
+	{
+		_globalFontSize = globalFontSize;
+	}
+
+	float GetGlobalFontSize()
+	{
+		return _globalFontSize;
+	}
+	
+	static void LoadCustomFont()
+	{
+		if (_customFontData.data == nullptr)
+			return;
+
+		for (int i = 0; i < _fontsCount; i++)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			auto newFont = io.Fonts->AddFontFromMemoryTTF(_customFontData.data, _customFontData.size, (i + 1) * _fontSizeStep);
+			if (newFont == nullptr)
+				return;
+
+			_fonts[i] = newFont;
+		}
+		_isCustomFontLoaded = true;
 	}
 
 	static void SetupImGuiStyle();
@@ -77,11 +146,7 @@ namespace renderer
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-		if (pFontData != nullptr)
-			pFont = io.Fonts->AddFontFromMemoryTTF(pFontData, dFontDataSize, 16, nullptr, io.Fonts->GetGlyphRangesCyrillic());
-		else
-			pFont = io.FontDefault;
-
+		LoadCustomFont();
 		SetupImGuiStyle();
 
 		//Set OriginalWndProcHandler to the Address of the Original WndProc function
@@ -105,7 +170,7 @@ namespace renderer
 		ImGui_ImplWin32_NewFrame();
 
 		ImGui::NewFrame();
-		ImGui::PushFont(pFont);
+		ImGui::PushFont(GetFontBySize(_globalFontSize));
 
 		renderer::events::RenderEvent();
 

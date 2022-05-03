@@ -1,6 +1,6 @@
 <h1 align="center">GenshinCheat</h1>
 
-Simple cheat for genshin with protection bypass.
+Maybe not so simple cheat for certain anime game <sub><sup>Genshin Impact</sup></sub>.
 <hr>
 
 <h1 align="center">Getting Started</h1>

@@ -9,7 +9,9 @@ namespace cheat::feature
     {
 	public:
 		config::Field<Hotkey> f_MenuKey;
-		
+		config::Field<bool> f_HotkeysEnabled;
+		config::Field<int> f_FontSize;
+
 		config::Field<bool> f_StatusMove;
 		config::Field<bool> f_StatusShow;
 
@@ -24,8 +26,6 @@ namespace cheat::feature
 
 		config::Field<bool> f_ConsoleLogging;
 		config::Field<bool> f_FileLogging;
-
-		config::Field<bool> f_HotkeysEnabled;
 
 		static Settings& GetInstance();
 

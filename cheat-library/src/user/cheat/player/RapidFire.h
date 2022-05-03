@@ -10,14 +10,14 @@ namespace cheat::feature
 	class RapidFire : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
-		config::Field<config::ToggleHotkey> f_MultiHit;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_MultiHit;
 		config::Field<int> f_Multiplier;
 		config::Field<bool> f_OnePunch;
-		config::Field<config::ToggleHotkey> f_Randomize;
+		config::Field<config::Toggle<Hotkey>> f_Randomize;
 		config::Field<int> f_minMultiplier;
 		config::Field<int> f_maxMultiplier;
-		config::Field<config::ToggleHotkey> f_MultiTarget;
+		config::Field<config::Toggle<Hotkey>> f_MultiTarget;
 		config::Field<float> f_MultiTargetRadius;
 
 		static RapidFire& GetInstance();

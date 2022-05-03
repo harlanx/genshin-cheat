@@ -3,7 +3,7 @@
 #include "Field.h"
 #include <vector>
 #include <string>
-#include "fields/ToggleHotkey.h"
+#include "fields/Toggle.h"
 #include "fields/Enum.h"
 
 #define NFEX(field, friendName, name, section, defaultValue, shared) field##(config::CreateField<decltype(##field##)::_ValueType>(friendName, name, section, shared, defaultValue))

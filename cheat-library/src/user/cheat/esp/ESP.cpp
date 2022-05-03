@@ -21,28 +21,35 @@ namespace cheat::feature
 	ESP::ESP() : Feature(),
 		NF(f_Enabled, "ESP", "ESP", false),
 
-		NF(f_DrawBoxMode, "Draw Mode", "ESP", DrawMode::Box),
-		NF(f_Fill, "Fill Box/Rectangle", "ESP", false),
-		NF(f_FillTransparency, "Fill Transparency", "ESP", 0.5f),
+        NF(f_DrawBoxMode, "Draw Mode", "ESP", DrawMode::Box),
+		NF(f_DrawTracerMode, "Tracer Mode", "ESP", DrawTracerMode::Line),
+        NF(f_Fill, "Fill Box/Rectangle/Arrows", "ESP", false),
+        NF(f_FillTransparency, "Fill Transparency", "ESP", 0.5f),
 
-		NF(f_DrawLine, "Draw Line", "ESP", false),
-		NF(f_DrawDistance, "Draw Distance", "ESP", false),
-		NF(f_DrawName, "Draw Name", "ESP", false),
+		NF(f_ArrowRadius, "Arrow Radius", "ESP", 100.0f),
+		NF(f_OutlineThickness, "Outline Thickness", "ESP", 1.0f),
+		NF(f_TracerSize, "Tracer Size", "ESP", 1.0f),
+        NF(f_DrawDistance, "Draw Distance", "ESP", false),
+        NF(f_DrawName, "Draw Name", "ESP", false),
 
 		NF(f_FontSize, "Font Size", "ESP", 12.0f),
-		NF(f_FontColor, "Font Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_ApplyGlobalColor, "Apply Global Colors", "ESP", false),
+		NF(f_FontOutline, "Font outline", "ESP", true),
+		NF(f_FontOutlineSize, "Font outline size", "ESP", 1.0f),
 
-		NF(f_BoxColor, "Box Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_LineColor, "Line Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_RectColor, "Rect Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalFontColor, "Font Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalBoxColor, "Box Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalLineColor, "Tracer Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalRectColor, "Rect Color", "ESP", ImColor(255, 255, 255)),
 
 		NF(f_MinSize, "Min. Entity Size", "ESP", 0.5f),
 		NF(f_Range, "Range", "ESP", 100.0f),
 		m_Search({})
 	{
-		cheat::events::KeyUpEvent += MY_METHOD_HANDLER(ESP::OnKeyUp);
 		InstallFilters();
+
+		m_FontContrastColor = ImGui::CalcContrastColor(f_GlobalFontColor);
+
+		cheat::events::KeyUpEvent += MY_METHOD_HANDLER(ESP::OnKeyUp);
 	}
 
 
@@ -54,34 +61,53 @@ namespace cheat::feature
 
 	void ESP::DrawMain()
 	{
-		BeginGroupPanel("General", ImVec2(-1, 0));
+		if (BeginGroupPanel("General", ImVec2(-1, 0), true))
+		{
+			ConfigWidget("ESP Enabled", f_Enabled, "Show filtered object through obstacles.");
+			ConfigWidget("Range (m)", f_Range, 1.0f, 1.0f, 200.0f);
 
-		ConfigWidget("ESP Enabled", f_Enabled, "Show filtered object through obstacles.");
-		ConfigWidget("Range (m)", f_Range, 1.0f, 1.0f, 200.0f);
+			ConfigWidget(f_DrawBoxMode, "Select the mode of box drawing.");
+      ConfigWidget(f_DrawTracerMode, "Select the mode of tracer drawing.");
+      
+			ConfigWidget(f_Fill);
+			ConfigWidget(f_FillTransparency, 0.01f, 0.0f, 1.0f, "Transparency of filled part.");
 
-		ConfigWidget(f_DrawBoxMode, "Select the mode of box drawing.");
-		ConfigWidget(f_Fill);
-		ConfigWidget(f_FillTransparency, 0.01f, 0.0f, 1.0f, "Transparency of filled part.");
+      if (f_DrawTracerMode.value() == DrawTracerMode::OffscreenArrows &&
+			BeginGroupPanel("Arrow tracer options", ImVec2(-1, 0), true))
+      {
+        ConfigWidget(f_TracerSize, 0.005f, 0.1f, 10.0f, "Size of tracer.");
+        ConfigWidget(f_ArrowRadius, 0.5f, 50.0f, 300.0f, "Radius of arrow.");
+        ConfigWidget(f_OutlineThickness, 0.005f, 0.0f, 10.0f, "Outline thickness of arrow.");
 
-		ImGui::Spacing();
-		ConfigWidget(f_DrawLine, "Show line from character to object on screen.");
-		ConfigWidget(f_DrawName, "Draw name of object.");
-		ConfigWidget(f_DrawDistance, "Draw distance of object.");
+        EndGroupPanel();
+      }
+      
+			ImGui::Spacing();
+			ConfigWidget(f_DrawName, "Draw name of object.");
+			ConfigWidget(f_DrawDistance, "Draw distance of object.");
 
-		ImGui::Spacing();
-		ConfigWidget(f_FontSize, 0.05f, 1.0f, 100.0f, "Font size of name or distance.");
-		ConfigWidget(f_FontColor, "Color of line, name, or distance text font.");
-		ConfigWidget(f_BoxColor, "Color of box font.");
-		ConfigWidget(f_LineColor, "Color of line font.");
-		ConfigWidget(f_RectColor, "Color of rectangle font.");
-		ConfigWidget(f_ApplyGlobalColor, "Override all color settings with above color setting.\n" \
-			"Turn off to revert to custom settings.");
+			ImGui::Spacing();
+			ConfigWidget(f_FontSize, 0.05f, 1.0f, 100.0f, "Font size of name or distance.");
+			ConfigWidget("## Font outline enabled", f_FontOutline); ImGui::SameLine();
+			ConfigWidget("Font outline", f_FontOutlineSize, 0.001f, 0.0f, 10.0f);
 
-		ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, "Minimum entity size as measured in-world.\n" \
-			"Some entities have either extremely small or no bounds at all.\n" \
-			"This parameter helps filter out entities that don't meet this condition.");
+			ImGui::Spacing();
+			if (BeginGroupPanel("Global colors", ImVec2(-1, 0), true))
+			{
+				if (ConfigWidget(f_GlobalFontColor, "Color of line, name, or distance text font."))
+					m_FontContrastColor = ImGui::CalcContrastColor(f_GlobalFontColor);
+				ConfigWidget(f_GlobalBoxColor, "Color of box font.");
+				ConfigWidget(f_GlobalLineColor, "Color of line font.");
+				ConfigWidget(f_GlobalRectColor, "Color of rectangle font.");
+				EndGroupPanel();
+			}
 
-		EndGroupPanel();
+			ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, "Minimum entity size as measured in-world.\n" \
+				"Some entities have either extremely small or no bounds at all.\n" \
+				"This parameter helps filter out entities that don't meet this condition.");
+
+			EndGroupPanel();
+		}
 
 		ImGui::Text("How to use item filters:\n\tLMB - Toggle visibility\n\tRMB - Open color picker");
 		ImGui::InputText("Search Filters", &m_Search);
@@ -105,7 +131,7 @@ namespace cheat::feature
 			f_Range.value(),
 			f_DrawBoxMode.value() == DrawMode::Box ? "Box" : f_DrawBoxMode.value() == DrawMode::Rectangle ? "Rect" : "None",
 			f_Fill ? "F" : "",
-			f_DrawLine ? "L" : "",
+			f_DrawTracerMode.value() == DrawTracerMode::Line ? "L" : f_DrawTracerMode.value() == DrawTracerMode::OffscreenArrows ? "A" : "",
 			f_DrawName ? "N" : "",
 			f_DrawDistance ? "D" : ""
 		);
@@ -235,8 +261,7 @@ namespace cheat::feature
 					if (!entry.m_Enabled || !m_FilterExecutor.ApplyFilter(entity, filter))
 						continue;
 
-					ImColor entityColor = entry.m_Color;
-					esp::render::DrawEntity(entry.m_Name, entity, entityColor);
+					esp::render::DrawEntity(entry.m_Name, entity, entry.m_Color, entry.m_ContrastColor);
 					break;
 				}
 			}
@@ -336,6 +361,7 @@ namespace cheat::feature
 			opened_id = 0;
 			if (color_changed)
 			{
+				field.value().m_ContrastColor = ImGui::CalcContrastColor(field.value().m_Color);
 				field.FireChanged();
 				color_changed = false;
 			}

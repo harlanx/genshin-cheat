@@ -189,15 +189,16 @@
     <ClInclude Include="src\user\cheat\teleport\CustomTeleports.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\user\cheat\visuals\NoFog.h">
+    <ClInclude Include="src\user\cheat\visuals\FPSUnlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\user\cheat\visuals\FPSUnlock.h">
+    <ClInclude Include="src\user\cheat\visuals\NoFog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\Ruda-Bold.ttf" />
+    <Font Include="res\Ruda-ExtraBold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\framework\dllmain.cpp">
@@ -341,10 +342,10 @@
     <ClCompile Include="src\user\cheat\teleport\CustomTeleports.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\user\cheat\visuals\NoFog.cpp">
+    <ClCompile Include="src\user\cheat\visuals\FPSUnlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\user\cheat\visuals\FPSUnlock.cpp">
+    <ClCompile Include="src\user\cheat\visuals\NoFog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

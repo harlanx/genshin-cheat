@@ -12,14 +12,14 @@ namespace cheat::feature
 	class MobVacuum : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
 
-		config::Field<config::ToggleHotkey> f_IncludeMonsters;
+		config::Field<config::Toggle<Hotkey>> f_IncludeMonsters;
 		config::Field<bool> f_MonsterCommon;
 		config::Field<bool> f_MonsterElites;
 		config::Field<bool> f_MonsterBosses;
 
-		config::Field<config::ToggleHotkey> f_IncludeAnimals;
+		config::Field<config::Toggle<Hotkey>> f_IncludeAnimals;
 		config::Field<bool> f_AnimalDrop;
 		config::Field<bool> f_AnimalPickUp;
 		config::Field<bool> f_AnimalNPC;

@@ -196,7 +196,7 @@ namespace cheat::feature
 
 		auto& manager = game::EntityManager::instance();
 		auto originalTarget = manager.entity(targetID);
-		if (!game::filters::combined::Living.IsValid(originalTarget))
+		if (!game::filters::combined::OrganicTargets.IsValid(originalTarget))
 			return callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
 
 		std::vector<cheat::game::Entity*> validEntities;

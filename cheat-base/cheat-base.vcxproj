@@ -172,7 +172,7 @@
     <ClInclude Include="src\cheat-base\config\fields.h" />
     <ClInclude Include="src\cheat-base\config\FieldSerialize.h" />
     <ClInclude Include="src\cheat-base\config\fields\Enum.h" />
-    <ClInclude Include="src\cheat-base\config\fields\ToggleHotkey.h" />
+    <ClInclude Include="src\cheat-base\config\fields\Toggle.h" />
     <ClInclude Include="src\cheat-base\config\internal\FieldBase.h" />
     <ClInclude Include="src\cheat-base\config\internal\FieldEntry.h" />
     <ClInclude Include="src\cheat-base\config\internal\FieldSerialize.h" />

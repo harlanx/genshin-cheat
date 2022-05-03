@@ -427,6 +427,7 @@ namespace cheat::game::filters
 						"Ningyo", "Regisvine", "Hypostasis", "Planelurker", "Nithhoggr"
 					}
 		};
+		SimpleFilter OrganicTargets = Monsters + Animals; // Solael: Please don't mess around with this filter.
 		//m0nkrel: We can choose the entities we need ourselves so as not to magnetize cats, dogs, etc.
 		//AdvancedFilter Animals = { std::vector<app::EntityType__Enum_1> {app::EntityType__Enum_1::EnvAnimal, app::EntityType__Enum_1::Monster }, std::vector<std::string> {"Crane","Tit", "Boar" , "Squirrel", "Fox", "Pigeon", "Wigeon", "Falcon" ,"Marten" } };
 	}

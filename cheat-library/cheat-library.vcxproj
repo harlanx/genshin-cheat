@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\Ruda-Bold.ttf" />
+    <Font Include="res\Ruda-ExtraBold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\user\cheat\teleport\CustomTeleports.cpp" />

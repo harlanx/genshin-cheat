@@ -2,12 +2,14 @@
 #include "Settings.h"
 
 #include <cheat-base/render/gui-util.h>
-
+#include <cheat-base/render/renderer.h>
 namespace cheat::feature 
 {
     Settings::Settings() : Feature(),
 		NF(f_MenuKey, "Show Cheat Menu Key", "General", Hotkey(VK_F1)),
-		
+		NF(f_HotkeysEnabled, "Hotkeys Enabled", "General", true),
+		NF(f_FontSize, "Font size", "General", 16.0f),
+
 		NF(f_StatusMove, "Move Status Window", "General::StatusWindow", true),
 		NF(f_StatusShow, "Show Status Window", "General::StatusWindow", true),
 		
@@ -21,10 +23,10 @@ namespace cheat::feature
 		NF(f_NotificationsDelay, "Notifications Delay", "General::Notify", 500),
   
 		NF(f_FileLogging,    "File Logging",    "General::Logging", false),
-		NF(f_ConsoleLogging, "Console Logging", "General::Logging", true),
-		NF(f_HotkeysEnabled, "Hotkeys Enabled", "General::Logging", true)
+		NF(f_ConsoleLogging, "Console Logging", "General::Logging", true)
+		
     {
-
+		renderer::SetGlobalFontSize(f_FontSize);
     }
 
     const FeatureGUIInfo& Settings::GetGUIInfo() const
@@ -42,6 +44,11 @@ namespace cheat::feature
 				"Key to toggle main menu visibility. Cannot be empty.\n"\
 				"If you forget this key, you can see or set it in your config file.");
 			ConfigWidget(f_HotkeysEnabled, "Enable hotkeys.");
+			if (ConfigWidget(f_FontSize, 1, 8, 64, "Font size for cheat interface."))
+			{
+				f_FontSize = std::clamp(f_FontSize.value(), 8, 64);
+				renderer::SetGlobalFontSize(f_FontSize);
+			}
 		}
 		EndGroupPanel();
 

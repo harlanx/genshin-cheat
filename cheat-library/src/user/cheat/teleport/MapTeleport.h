@@ -11,7 +11,7 @@ namespace cheat::feature
 	class MapTeleport : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
 		config::Field<bool> f_DetectHeight;
 		config::Field<float> f_DefaultHeight;
 		config::Field<Hotkey> f_Key;

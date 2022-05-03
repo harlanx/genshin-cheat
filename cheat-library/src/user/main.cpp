@@ -13,7 +13,15 @@ bool StubTerminateProcess();
 
 void Run(HMODULE* phModule)
 {
-    Sleep(10000);
+#ifdef _DEBUG
+	Sleep(10000);
+#else
+	while (GetModuleHandle("UserAssembly.dll") == nullptr)
+	{
+		Sleep(2000);
+	}
+    Sleep(15000);
+#endif
 
 	ResourceLoader::SetModuleHandle(*phModule);
 

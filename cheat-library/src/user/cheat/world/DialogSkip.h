@@ -8,10 +8,10 @@ namespace cheat::feature
 	class DialogSkip : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
-		config::Field<config::ToggleHotkey> f_AutoSelectDialog;
-		config::Field<config::ToggleHotkey> f_ExcludeImportant;
-		config::Field<config::ToggleHotkey> f_FastDialog;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_AutoSelectDialog;
+		config::Field<config::Toggle<Hotkey>> f_ExcludeImportant;
+		config::Field<config::Toggle<Hotkey>> f_FastDialog;
 
 		static DialogSkip& GetInstance();
 

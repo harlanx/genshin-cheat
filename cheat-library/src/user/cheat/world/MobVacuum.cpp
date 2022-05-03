@@ -52,7 +52,7 @@ namespace cheat::feature
     	BeginGroupPanel("Animals", ImVec2(-1, 0));
         {
             filtersChanged |= ConfigWidget(f_IncludeAnimals, "Include animals in vacuum.");
-            filtersChanged |= ConfigWidget(f_AnimalDrop, "Animals you need to defeat before collect."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_AnimalDrop, "Animals you need to kill before collecting."); ImGui::SameLine();
             filtersChanged |= ConfigWidget(f_AnimalPickUp, "Animals you can immediately collect."); ImGui::SameLine();
             filtersChanged |= ConfigWidget(f_AnimalNPC, "Animals without mechanics.");
         }
@@ -63,14 +63,14 @@ namespace cheat::feature
 
     	ConfigWidget("Instant Vacuum", f_Instantly, "Vacuum entities instantly.");
         ConfigWidget("Only Hostile/Aggro", f_OnlyTarget, "If enabled, vacuum will only affect monsters targeting you. Will not affect animals.");
-        ConfigWidget("Speed", f_Speed, 0.1f, 1.0f, 15.0f, "If 'Instant Vacuum' not checked, mob will be vacuumed at the specified speed.");
+        ConfigWidget("Speed", f_Speed, 0.1f, 1.0f, 15.0f, "If 'Instant Vacuum' is not checked, mob will be vacuumed at the specified speed.");
         ConfigWidget("Radius (m)", f_Radius, 0.1f, 5.0f, 150.0f, "Radius of vacuum.");
         ConfigWidget("Distance (m)", f_Distance, 0.1f, 0.5f, 10.0f, "Distance between the player and the monster.");
     }
 
     bool MobVacuum::NeedStatusDraw() const
-{
-        return f_Enabled.value();
+    {
+        return f_Enabled;
     }
 
     void MobVacuum::DrawStatus() 
@@ -148,6 +148,13 @@ namespace cheat::feature
     {
         static auto positions = new std::map<uint32_t, app::Vector3>();
 
+        if (!f_Enabled)
+            return;
+
+        app::Vector3 targetPos = CalcMobVacTargetPos();
+        if (IsVectorZero(targetPos))
+            return;
+
         // Updates filter only once if value changes from using hotkey.
         if (f_EnabledPrevious != f_Enabled.value() ||
             f_IncludeMonstersPrevious != f_IncludeMonsters.value() ||
@@ -158,13 +165,6 @@ namespace cheat::feature
             f_IncludeMonstersPrevious = f_IncludeMonsters.value();
             f_IncludeAnimalsPrevious = f_IncludeAnimals.value();
         }
-
-        if (!f_Enabled.value())
-            return;
-
-        app::Vector3 targetPos = CalcMobVacTargetPos();
-        if (IsVectorZero(targetPos))
-            return;
 
         if (!f_IncludeMonsters && !f_IncludeAnimals)
             return;

@@ -8,7 +8,7 @@ namespace cheat::feature
 	class ElementalSight : public Feature
 	{
 	public:
-		config::Field<config::ToggleHotkey> f_Enabled;
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
 
 		static ElementalSight& GetInstance();
 

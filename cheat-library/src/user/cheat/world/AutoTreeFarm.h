@@ -8,7 +8,7 @@ namespace cheat::feature
 	class AutoTreeFarm : public Feature
     {
 	public:
-		config::Field<config::ToggleHotkey> m_Enabled;
+		config::Field<config::Toggle<Hotkey>> m_Enabled;
 		config::Field<int> m_AttackDelay;
 		config::Field<int> m_RepeatDelay;
 		config::Field<int> m_AttackPerTree;

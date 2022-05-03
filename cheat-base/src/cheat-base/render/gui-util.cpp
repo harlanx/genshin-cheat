@@ -59,61 +59,116 @@ float CalcWidth(const std::string_view& view)
 }
 
 
-#define END_CONFIG_WIDGET() if (result) field.FireChanged(); \
+#define END_TYPE_WIDGET() \
     if (desc != nullptr) { ImGui::SameLine(); HelpMarker(desc); } \
     return result;
 
+#define END_CONFIG_WIDGET() if (result) field.FireChanged(); return result;
+
+bool TypeWidget(const char* label, bool& value, const char* desc)
+{
+    bool result = ImGui::Checkbox(label, &value);
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, int& value, int step, int start, int end, const char* desc)
+{
+    bool result = false;
+
+    if (start == end)
+        result = ImGui::InputInt(label, &value, step);
+    else
+        result = ImGui::DragInt(label, &value, (float)step, start, end);
+
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, float& value, float step, float start, float end, const char* desc)
+{
+    bool result = false;
+
+    if (start == end)
+        result = ImGui::InputFloat(label, &value, step);
+    else
+        result = ImGui::DragFloat(label, &value, step, start, end);
+
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, Hotkey& value, bool clearable, const char* desc)
+{
+    bool result = InputHotkey(label, &value, clearable);
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, std::string& value, const char* desc)
+{
+    bool result = ImGui::InputText(label, &value);
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, ImColor& value, const char* desc)
+{
+    bool result = ImGui::ColorEdit4(label, reinterpret_cast<float*>(&value));
+    END_TYPE_WIDGET();
+}
+
+bool TypeWidget(const char* label, config::Toggle<Hotkey>& value, const char* desc, bool hotkey)
+{
+    bool result = hotkey ? InputHotkey(label, &value.value, true) : ImGui::Checkbox(label, &value.enabled);
+    END_TYPE_WIDGET();
+}
+
 bool ConfigWidget(const char* label, config::Field<bool>& field, const char* desc)
 {
-    bool result = ImGui::Checkbox(label, field);
+    bool result = TypeWidget(label, field.value(), desc);
     END_CONFIG_WIDGET();
 }
 
 bool ConfigWidget(const char* label, config::Field<int>& field, int step, int start, int end, const char* desc)
 {
-    bool result = false;
-
-    if (start == end)
-        result = ImGui::InputInt(label, field, step);
-    else
-        result = ImGui::DragInt(label, field, (float)step, start, end);
-
+    bool result = TypeWidget(label, field.value(), step, start, end, desc);
     END_CONFIG_WIDGET();
 }
 
 bool ConfigWidget(const char* label, config::Field<float>& field, float step, float start, float end, const char* desc)
 {
-    bool result = false;
-
-    if (start == end)
-        result = ImGui::InputFloat(label, field, step);
-    else
-        result = ImGui::DragFloat(label, field, step, start, end);
-
+    bool result = TypeWidget(label, field.value(), step, start, end, desc);
     END_CONFIG_WIDGET();
 }
 
 bool ConfigWidget(const char* label, config::Field<Hotkey>& field, bool clearable, const char* desc)
 {
-    bool result = InputHotkey(label, field, clearable);
+    bool result = TypeWidget(label, field.value(), clearable, desc);
     END_CONFIG_WIDGET();
 }
 
 bool ConfigWidget(const char* label, config::Field<std::string>& field, const char* desc)
 {
-    bool result = ImGui::InputText(label, field);
+    bool result = TypeWidget(label, field.value(), desc);
     END_CONFIG_WIDGET();
 }
 
 bool ConfigWidget(const char* label, config::Field<ImColor>& field, const char* desc /*= nullptr*/)
 {
-    bool result = ImGui::ColorEdit4(label, reinterpret_cast<float*>(field.pointer()));
+    bool result = TypeWidget(label, field.value(), desc);
     END_CONFIG_WIDGET();
 }
 
-bool ConfigWidget(const char* label, config::Field<config::ToggleHotkey>& field, const char* desc /*= nullptr*/, bool hotkey /*= false*/)
+bool ConfigWidget(const char* label, config::Field<config::Toggle<float>>& field, float step, float start, float end,
+	const char* desc, bool hotkey)
 {
-    bool result = hotkey ? InputHotkey(label, &field.value().hotkey, true) : ImGui::Checkbox(label, &field.value().enabled);
+    ImGui::PushID(&label);
+    bool result = TypeWidget("", field.value().enabled);
+    ImGui::SameLine();
+    result |= TypeWidget(label, field.value().value, step, start, end, desc);
+    ImGui::PopID();
+    END_CONFIG_WIDGET();
+}
+
+bool ConfigWidget(const char* label, config::Field<config::Toggle<Hotkey>>& field, const char* desc /*= nullptr*/, bool hotkey /*= false*/)
+{
+    bool result = TypeWidget(label, field.value(), desc, hotkey);
     END_CONFIG_WIDGET();
 }
 
@@ -147,7 +202,12 @@ bool ConfigWidget(config::Field<ImColor>& field, const char* desc /*= nullptr*/)
     return ConfigWidget(field.friendName().c_str(), field, desc);
 }
 
-bool ConfigWidget(config::Field<config::ToggleHotkey>& field, const char* desc /*= nullptr*/, bool hotkey /*= false*/)
+bool ConfigWidget(config::Field<config::Toggle<float>>& field, float step, float start, float end, const char* desc)
+{
+    return ConfigWidget(field.friendName().c_str(), field, step, start, end, desc);
+}
+
+bool ConfigWidget(config::Field<config::Toggle<Hotkey>>& field, const char* desc /*= nullptr*/, bool hotkey /*= false*/)
 {
     return ConfigWidget(field.friendName().c_str(), field, desc, hotkey);
 }
@@ -435,6 +495,47 @@ void TextURL(const char* name_, const char* URL_, bool SameLineBefore_, bool Sam
 	if (SameLineAfter_) { ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x); }
 }
 
+bool operator&(OutlineSide lhs, OutlineSide rhs) {
+    return
+        static_cast<std::underlying_type<OutlineSide>::type>(lhs) &
+        static_cast<std::underlying_type<OutlineSide>::type>(rhs);
+}
+
+void DrawTextWithOutline(ImDrawList* drawList, ImFont* font, float fontSize, const ImVec2& screenPos,
+    const char* text, const ImColor& textColor, float outlineThickness, OutlineSide sides, const ImColor& outlineColor)
+{
+    if (outlineThickness == 0.0f)
+    {
+        drawList->AddText(font, fontSize, screenPos, outlineColor, text);
+    }
+    else
+    {
+        if (sides & OutlineSide::Left)
+            drawList->AddText(font, fontSize,
+                { screenPos.x - outlineThickness, screenPos.y }, outlineColor, text);
+
+        if (sides & OutlineSide::Right)
+            drawList->AddText(font, fontSize,
+                { screenPos.x + outlineThickness, screenPos.y }, outlineColor, text);
+
+        if (sides & OutlineSide::Bottom)
+            drawList->AddText(font, fontSize,
+                { screenPos.x, screenPos.y - outlineThickness }, outlineColor, text);
+
+        if (sides & OutlineSide::Top)
+            drawList->AddText(font, fontSize,
+                { screenPos.x, screenPos.y + outlineThickness }, outlineColor, text);
+    }
+
+    drawList->AddText(font, fontSize, screenPos, textColor, text);
+}
+
+void DrawTextWithOutline(ImDrawList* drawList, const ImVec2& screenPos, const char* text, const ImColor& textColor,
+    float outlineThickness, OutlineSide sides, const ImColor& outlineColor)
+{
+    DrawTextWithOutline(drawList, nullptr, 0.0f, screenPos, text, textColor, outlineThickness, sides, outlineColor);
+}
+
 // Modified version of: https://github.com/spirthack/CSGOSimple/blob/master/CSGOSimple/UI.cpp#L287 
 bool ImGui::HotkeyWidget(const char* label, Hotkey& hotkey, const ImVec2& size)
 {
@@ -553,7 +654,7 @@ bool ImGui::HotkeyWidget(const char* label, Hotkey& hotkey, const ImVec2& size)
 }
 
 // https://github.com/ocornut/imgui/issues/3798
-float CalcContrastRatio(const ImU32& backgroundColor, const ImU32& foreGroundColor)
+float ImGui::CalcContrastRatio(const ImU32& backgroundColor, const ImU32& foreGroundColor)
 {
     // real code https://www.w3.org/TR/WCAG20/#relativeluminancedef
     /*const auto colBG = ImGui::ColorConvertU32ToFloat4(backgroundColor);
@@ -577,6 +678,11 @@ float CalcContrastRatio(const ImU32& backgroundColor, const ImU32& foreGroundCol
     if (contrastRatio < 1.0f)
         return 1.0f / contrastRatio;
     return contrastRatio;
+}
+
+ImColor ImGui::CalcContrastColor(const ImColor& foreground, float maxContrastRatio, const ImColor& background, const ImColor& inverted)
+{
+    return ImGui::CalcContrastRatio(background, foreground) < maxContrastRatio ? inverted : background;
 }
 
 bool ImGui::PushStyleColorWithContrast(ImU32 backGroundColor, ImGuiCol foreGroundColor, ImU32 invertedColor, float maxContrastRatio)

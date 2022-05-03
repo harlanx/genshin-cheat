@@ -97,9 +97,6 @@ namespace cheat
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 0), true, window_flags);
 
-		ImGui::Text(current->c_str());
-		ImGui::Separator();
-
 		auto& sections = m_FeatureMap[*current];
 		auto emptyName = std::string();
 		if (sections.count(emptyName) > 0)
@@ -447,15 +444,15 @@ namespace cheat
 		if (!settings.f_HotkeysEnabled)
 			return;
 
-		for (auto& field : config::GetFields<config::ToggleHotkey>())
+		for (auto& field : config::GetFields<config::Toggle<Hotkey>>())
 		{
-			auto& value = field.value();
-			if (value.hotkey.IsPressed(key))
+			auto& toggle = field.value();
+			if (toggle.value.IsPressed(key))
 			{
-				value.enabled = !value.enabled;
+				toggle.enabled = !toggle.enabled;
 				field.FireChanged();
 
-				std::string title = fmt::format("{}: {}", field.friendName(), (value ? "Enabled" : "Disabled"));
+				std::string title = fmt::format("{}: {}", field.friendName(), (toggle ? "Enabled" : "Disabled"));
 				ImGuiToast toast(ImGuiToastType_None, settings.f_NotificationsDelay);
 				toast.set_title(title.c_str());
 				ImGui::InsertNotification(toast);

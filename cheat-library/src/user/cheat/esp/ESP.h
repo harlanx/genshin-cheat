@@ -19,21 +19,35 @@ namespace cheat::feature
 			Box
 		};
 
-		config::Field<config::ToggleHotkey> f_Enabled;
+		enum class DrawTracerMode
+		{
+			None,
+			Line,
+			OffscreenArrows
+		};
+
+		config::Field<config::Toggle<Hotkey>> f_Enabled;
+    
 		config::Field<config::Enum<DrawMode>> f_DrawBoxMode;
+		config::Field<config::Enum<DrawTracerMode>> f_DrawTracerMode;
 		config::Field<bool> f_Fill;
 		config::Field<float> f_FillTransparency;
 
-		config::Field<bool> f_DrawLine;
 		config::Field<bool> f_DrawDistance;
 		config::Field<bool> f_DrawName;
+		config::Field<float> f_ArrowRadius;
+		config::Field<float> f_OutlineThickness;
+		config::Field<float> f_TracerSize;
 
-		config::Field<float> f_FontSize;
-		config::Field<ImColor> f_FontColor;
-		config::Field<ImColor> f_BoxColor;
-		config::Field<ImColor> f_RectColor;
-		config::Field<ImColor> f_LineColor;
-		config::Field<bool> f_ApplyGlobalColor;
+		config::Field<int> f_FontSize;
+		config::Field<bool> f_FontOutline;
+		config::Field<float> f_FontOutlineSize;
+
+		config::Field<config::Toggle<ImColor>> f_GlobalFontColor;
+		ImColor m_FontContrastColor;
+		config::Field<config::Toggle<ImColor>> f_GlobalBoxColor;
+		config::Field<config::Toggle<ImColor>> f_GlobalRectColor;
+		config::Field<config::Toggle<ImColor>> f_GlobalLineColor;
 
 		config::Field<float> f_MinSize;
 		config::Field<float> f_Range;

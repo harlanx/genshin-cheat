@@ -2,6 +2,7 @@
 #include "Hotkeys.h"
 
 #include <helpers.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace cheat::feature 
 {
@@ -15,10 +16,58 @@ namespace cheat::feature
 
     void Hotkeys::DrawMain()
     {
-        for (auto& field : config::GetFields<config::ToggleHotkey>())
+        static std::string searchBuffer;
+        ImGui::InputText("Search", &searchBuffer);
+
+        ImGui::BeginChild("Hotkeys");
+        
+        std::unordered_map<std::string, std::vector<config::Field<config::Toggle<Hotkey>>*>> sections;
+
+        for (auto& field : config::GetFields<config::Toggle<Hotkey>>())
         {
-            ConfigWidget(field, nullptr, true);
+            if (!searchBuffer.empty())
+            {
+                auto name = field.friendName();
+                auto it = std::search(
+                    name.begin(), name.end(),
+                    searchBuffer.begin(), searchBuffer.end(),
+                    [](char ch1, char ch2) { return std::tolower(ch1) == std::tolower(ch2); }
+                );
+                if (it == name.end())
+                    continue;
+            }
+
+            sections[field.section()].push_back(&field);
         }
+
+        std::vector<config::Field<config::Toggle<Hotkey>>*> singleLineSections;
+        std::vector<std::vector<config::Field<config::Toggle<Hotkey>>*>*> multiLineSections;
+        for (auto& [section, fields] : sections)
+        {
+            if (fields.size() == 1)
+                singleLineSections.push_back(fields[0]);
+            else
+                multiLineSections.push_back(&fields);
+        }
+
+        for (auto& field : singleLineSections)
+        {
+            ConfigWidget(*field, nullptr, true);
+        }
+
+        for (auto& fields : multiLineSections)
+        {
+	        if (BeginGroupPanel((*fields)[0]->section().c_str(), ImVec2(-1, 0), true))
+	        {
+		        for (auto& field : *fields)
+		        {
+                    ConfigWidget(*field, nullptr, true);
+		        }
+                EndGroupPanel();
+	        }
+        }
+
+        ImGui::EndChild();
     }
 
     Hotkeys& Hotkeys::GetInstance()
