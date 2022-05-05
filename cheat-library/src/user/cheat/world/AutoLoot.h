@@ -9,12 +9,18 @@ namespace cheat::feature
 	class AutoLoot : public Feature
     {
 	public:
-		config::Field<config::Toggle<Hotkey>> f_AutoLoot;
-		config::Field<config::Toggle<Hotkey>> f_OpenChest;
+		config::Field<config::Toggle<Hotkey>> f_AutoPickup;
+		config::Field<config::Toggle<Hotkey>> f_AutoTreasure;
+		config::Field<config::Toggle<Hotkey>> f_UseCustomRange;
 
 		config::Field<int> f_DelayTime;
-		config::Field<bool> f_UseCustomRange;
 		config::Field<float> f_CustomRange;
+
+		config::Field<bool> f_Chest;
+		config::Field<bool> f_Leyline;
+		config::Field<bool> f_Investigate;
+		config::Field<bool> f_QuestInteract;
+		config::Field<bool> f_Others;
 
 		static AutoLoot& GetInstance();
 

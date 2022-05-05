@@ -3418,6 +3418,18 @@ namespace app {
         float z;
     };
 
+    struct Vector3d {
+        double x;
+        double y;
+        double z;
+    };
+
+    struct Vector3d_1 {
+        double x;
+        double y;
+        double z;
+    };
+
     struct LuaAbilityParam__VTable {
         VirtualInvokeData Equals;
         VirtualInvokeData Finalize;
@@ -4686,6 +4698,11 @@ namespace app {
 
     struct Nullable_1_UInt32_ {
         uint32_t value;
+        bool has_value;
+    };
+
+    struct Nullable_1_Double_ {
+        double value;
         bool has_value;
     };
 
@@ -7531,6 +7548,11 @@ namespace app {
         int32_t m_SurfaceType;
         int32_t m_Layer;
         struct Collider* m_Collider;
+    };
+
+    struct Ray {
+        struct Vector3 m_Origin;
+        struct Vector3 m_Direction;
     };
 
     struct Nullable_1_Boolean_ {
@@ -10430,6 +10452,375 @@ namespace app {
         struct LCAvatarCombat__Class* klass;
         MonitorData* monitor;
         struct LCAvatarCombat__Fields fields;
+    };
+
+#if defined(_CPLUSPLUS_)
+    enum class HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum : int32_t {
+        Move = 0x00000000,
+        TurnDirection = 0x00000001,
+        FallOnGround = 0x00000002,
+        GoUpstairs = 0x00000003,
+        JumpUpWallReady = 0x00000004,
+        Climb = 0x00000005,
+        JumpUpWallForStandby = 0x00000006,
+        StandbyToClimb = 0x00000007,
+        Jump = 0x00000008,
+        Drop = 0x00000009,
+        Fly = 0x0000000a,
+        CombatMove = 0x0000000b,
+        CombatFallOnGround = 0x0000000c,
+        CombatAir = 0x0000000d,
+        Swim = 0x0000000e,
+        SwimJump = 0x0000000f,
+        Ladder = 0x00000010,
+        FlyGateLoading = 0x00000011,
+        Crouch = 0x00000012,
+        Perform = 0x00000013,
+        FlyFollowRoute = 0x00000014,
+        Null = 0x00000015,
+        Vehicle = 0x00000016,
+        Skiff = 0x00000017,
+    };
+
+#else
+    enum HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum {
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Move = 0x00000000,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_TurnDirection = 0x00000001,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_FallOnGround = 0x00000002,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_GoUpstairs = 0x00000003,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_JumpUpWallReady = 0x00000004,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Climb = 0x00000005,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_JumpUpWallForStandby = 0x00000006,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_StandbyToClimb = 0x00000007,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Jump = 0x00000008,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Drop = 0x00000009,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Fly = 0x0000000a,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_CombatMove = 0x0000000b,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_CombatFallOnGround = 0x0000000c,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_CombatAir = 0x0000000d,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Swim = 0x0000000e,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_SwimJump = 0x0000000f,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Ladder = 0x00000010,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_FlyGateLoading = 0x00000011,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Crouch = 0x00000012,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Perform = 0x00000013,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_FlyFollowRoute = 0x00000014,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Null = 0x00000015,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Vehicle = 0x00000016,
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum_Skiff = 0x00000017,
+    };
+
+#endif
+    struct SCameraModuleInitialize__VTable {
+        VirtualInvokeData Equals;
+        VirtualInvokeData Finalize;
+        VirtualInvokeData GetHashCode;
+        VirtualInvokeData ToString;
+        VirtualInvokeData PODDMLNOAIC;
+        VirtualInvokeData CJFDOKANFFO;
+        VirtualInvokeData MODBDHFJMMK;
+        VirtualInvokeData BDEMLMONJLP;
+        VirtualInvokeData CEONIHCAFLE;
+        VirtualInvokeData EKNGAGLAGDO;
+        VirtualInvokeData FEECLIEHIMB;
+        VirtualInvokeData BDCBKMLNFBH;
+        VirtualInvokeData HHLKFCNMNFF;
+        VirtualInvokeData HJIDOMGOCNO;
+        VirtualInvokeData HIDLLHBHACG;
+    };
+
+    struct SCameraModuleInitialize__StaticFields {
+        struct DelegateBridge* MGFFCDGAIDM;
+        struct DelegateBridge* EMPDBKKFDEH;
+        struct DelegateBridge* LJFCBJFECIM;
+        struct DelegateBridge* OBDMMEOIDDD;
+        struct DelegateBridge* PMLMIEOEAEI;
+        struct DelegateBridge* ACDKGBLBOPF;
+        struct DelegateBridge* GJGHGIEECBJ;
+        struct DelegateBridge* KMNDONNIDOG;
+        struct DelegateBridge* EDKBBBAPKNK;
+        struct DelegateBridge* LCCJOCOOPNG;
+        struct DelegateBridge* DPMMFLGDGIE;
+        struct DelegateBridge* CIADAMOHLOO;
+        struct DelegateBridge* EJMEFEDPGKO;
+        struct DelegateBridge* CGKHIGGPGDI;
+        struct DelegateBridge* NHMJOEBDCOO;
+        struct DelegateBridge* KKHKGALGNBF;
+        struct DelegateBridge* MIBGPOOPJLI;
+        struct DelegateBridge* IDKHBEDAJPF;
+        struct DelegateBridge* GKJOJNEECDM;
+        struct DelegateBridge* ADEPIOCJMPN;
+        struct DelegateBridge* LBCLKFHBHIE;
+        struct DelegateBridge* HAOKFADIBCF;
+        struct DelegateBridge* CNCLDMPOFAJ;
+        struct DelegateBridge* DPJPHBIHEFA;
+        struct DelegateBridge* KHHAOEIFDAP;
+        struct DelegateBridge* POLIPAAFCPA;
+        struct DelegateBridge* FPOCACECFCG;
+        struct DelegateBridge* IFLPBMPEBCN;
+        struct DelegateBridge* MHKCECLNCOD;
+        struct DelegateBridge* LIDKADPGCFA;
+        struct DelegateBridge* KDCPGFEEFCL;
+        struct DelegateBridge* FKAONMCKIBP;
+        struct DelegateBridge* FEDMEBPGJFE;
+        struct DelegateBridge* IDBHCJFAOHO;
+        struct DelegateBridge* IBBBMCNODMJ;
+        struct DelegateBridge* HAOKOPOHLHJ;
+        struct DelegateBridge* GPABAMGACIH;
+    };
+
+    struct SCameraModuleInitialize__Class {
+        Il2CppClass_0 _0;
+        Il2CppRuntimeInterfaceOffsetPair* interfaceOffsets;
+        struct SCameraModuleInitialize__StaticFields* static_fields;
+        const Il2CppRGCTXData* rgctx_data;
+        Il2CppClass_1 _1;
+        struct SCameraModuleInitialize__VTable vtable;
+    };
+
+    struct __declspec(align(8)) SCameraModuleBase__Fields {
+        struct PipelineCameraModuleConfig* config;
+        struct PipelineCameraGlobalConfig* globalConfig;
+        struct SCameraBaseState* _state;
+    };
+
+    struct SCameraModuleInitialize__Fields {
+        struct SCameraModuleBase__Fields _;
+        bool levelCinemachine;
+        struct SimpleVector3Damper* _skfilter;
+        bool _isFilterInitialized;
+        bool _isTrySmoothBetweenNormalAndClimb;
+        double _smoothLerpSpeed;
+        struct Vector3d_1 _smoothingTransformLookAtPoint;
+        struct SimpleKalmanFilter* _dirKfilter;
+        bool _isDirectionFilterInitialized;
+        struct Vector3d__Array* _faceDirectionTrace;
+        bool _isFaceDirectionTraceInitialized;
+        struct Vector3d_1 _lastFrameSmoothFaceDirection;
+        bool _hasEnteredAvatarClimb;
+        bool _hasBeenConsistent;
+        double _timerForWaitingFacingToWallNoraml;
+#if defined(_CPLUSPLUS_)
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum _curFSMState;
+#else
+        int32_t _curFSMState;
+#endif
+#if defined(_CPLUSPLUS_)
+        HumanoidMoveFSM_HumanoidMoveFSM_FSMStateID__Enum _lastFSMState;
+#else
+        int32_t _lastFSMState;
+#endif
+        struct Vector3d_1 _climbWallNormal;
+        bool _climbWallNormalGetted;
+        int32_t _LayerIndex;
+        int32_t _SceneLayerIndex;
+        struct Ray _ray;
+        struct RaycastHit _hitInfo;
+        double _timerForDropping;
+        bool _firstStartFlag;
+        bool _isMoving;
+        bool _isDropping;
+        bool _isCombatHitCamera;
+        bool _isInStandby2Climb;
+        bool _isWaterFall;
+        double _waterHeight;
+        struct Vector3d_1 _waterFallNormal;
+        struct Vector3d_1 _avatarVelocity;
+        bool _isAvatarMoveFollowRefferenceSystem;
+        double _inputMoveAngle;
+        double _inputMoveMold;
+        double _defaultCameraDistanceAdjust;
+        float HOBOHFMFPPG;
+        float POIEBBJDKKF;
+        bool DJDBLKBDMAH;
+        struct Dictionary_2_UnityEngine_Vector2_System_Double_* _animStateChangePair;
+        struct Dictionary_2_UnityEngine_Vector2_SCameraModuleInitialize_SCameraModuleInitialize_FilterKeepType_* _animStateChangeType;
+        struct Dictionary_2_UnityEngine_Vector2_System_Double_* _animStateChangeTime;
+        double _preNormalRadiusTarget;
+        double _preNormalRadiusStart;
+        double _deltaTimeNormal;
+        bool _lerpingNormal;
+        struct Vector3d_1 heightAdjust;
+        struct Vector3d_1 heightAdjustMax;
+        struct Vector3d_1 currHeightAdjust;
+    };
+
+    struct SCameraModuleInitialize {
+        struct SCameraModuleInitialize__Class* klass;
+        MonitorData* monitor;
+        struct SCameraModuleInitialize__Fields fields;
+    };
+
+    struct __declspec(align(8)) SimpleVector3Damper__Fields {
+        struct Vector3d_1 _lastPosition;
+        struct Vector3d_1 _lastTargetPosition;
+        struct Vector3d_1 _lastVelocity;
+        double _dampTime;
+    };
+
+#if defined(_CPLUSPLUS_)
+    enum class CameraModuleState__Enum : int32_t {
+        Normal = 0x00000000,
+        Parallel = 0x00000001,
+        Cinema = 0x00000002,
+    };
+
+#else
+    enum CameraModuleState__Enum {
+        CameraModuleState__Enum_Normal = 0x00000000,
+        CameraModuleState__Enum_Parallel = 0x00000001,
+        CameraModuleState__Enum_Cinema = 0x00000002,
+    };
+
+#endif
+#if defined(_CPLUSPLUS_)
+    enum class ODBAPAHHJKN__Enum : int32_t {
+        None = 0x00000000,
+        LerpingIn = 0x00000001,
+        Free = 0x00000002,
+        LerpingOut = 0x00000003,
+    };
+
+#else
+    enum ODBAPAHHJKN__Enum {
+        ODBAPAHHJKN__Enum_None = 0x00000000,
+        ODBAPAHHJKN__Enum_LerpingIn = 0x00000001,
+        ODBAPAHHJKN__Enum_Free = 0x00000002,
+        ODBAPAHHJKN__Enum_LerpingOut = 0x00000003,
+    };
+
+#endif
+    struct CameraShareData {
+        int32_t targetFrameRate;
+        bool isBackground;
+        bool isBlending;
+        bool disableProtect;
+#if defined(_CPLUSPLUS_)
+        CameraModuleState__Enum state;
+#else
+        int32_t state;
+#endif
+#if defined(_CPLUSPLUS_)
+        CameraModuleState__Enum lastFrameState;
+#else
+        int32_t lastFrameState;
+#endif
+        double anchorDistance;
+        double defaultHalfFov;
+        double CameraNearClipPlane;
+        double CameraHalfFov;
+        double CameraAspect;
+        double BoatFov;
+        struct Vector3d_1 outCameraPosition;
+        struct Vector3d_1 outCameraSpherical;
+        struct Vector3d_1 outCameraForward;
+        struct Vector3d_1 outCameraUp;
+        struct Vector3d_1 cameraPosition;
+        struct Vector3d_1 cameraSpherical;
+        struct Vector3d_1 cameraForward;
+        struct Vector3d_1 cameraUp;
+        struct Vector3d_1 refAnchorPosition;
+        struct Vector3d_1 lastCameraPosition;
+        struct Vector3d_1 lastCameraSpherical;
+        struct Vector3d_1 lastCameraForward;
+        struct Vector3d_1 lastCameraUp;
+        struct Vector3d_1 lastRefAnchorPosition;
+        struct Vector3d_1 lastFrameCameraPosition;
+        struct Vector3d_1 lastFrameCameraSpherical;
+        struct Vector3d_1 lastFrameCameraForward;
+        struct Vector3d_1 lastFrameCameraUp;
+        struct Vector3d_1 lastFrameRefAnchorPosition;
+        double cameraForwardPoleDeltaAngle;
+        double cameraForwardElevDeltaAngle;
+        double lastFrameCameraForwardPoleDeltaAngle;
+        double lastFrameCameraForwardElevDeltaAngle;
+        struct Vector3d_1 lastFrameFilterLookAtPosition;
+        struct Vector3d_1 lastFrameLookAtPosition;
+        struct Vector3d_1 lastFrameTransformLookAtPosition;
+        double additionalRadius;
+        double globalDefaultCameraLocateRatio;
+        double currentManualLocateRatio;
+        double currentHeightAdjustRatio;
+        double currentWarningLocateRatio;
+        double maxRadiusAjustRatio;
+        double _defaultRadiusExtraRatio;
+        double _maxRadiusExtraRatio;
+        double _maxRadiusNormal;
+        double _defaultLocateRatioNormal;
+        double _maxRadiusCombat;
+        double _minCameraRadius;
+        double maxRadiusNormalInLerping;
+        double maxRadiusCombatInLerping;
+        double globalDefaultElevation;
+        double globalMinElevation;
+        double globalMaxElevation;
+        bool CNNNLIMHHKK;
+        bool EPCDPKNLHEA;
+#if defined(_CPLUSPLUS_)
+        ODBAPAHHJKN__Enum CJOOGBBKNPM;
+#else
+        int32_t CJOOGBBKNPM;
+#endif
+#if defined(_CPLUSPLUS_)
+        ODBAPAHHJKN__Enum LMKHMGGMCGF;
+#else
+        int32_t LMKHMGGMCGF;
+#endif
+        bool DDFJOMJBMEE;
+        struct Vector3d_1 DPEJMKOAAKG;
+        bool isAvatarFocusing;
+        bool isRotating;
+        bool isManuallyRotating;
+        bool isZooming;
+        bool isMoving;
+        bool isFlying;
+        bool isDropping;
+        bool isJumping;
+        bool isBeingHit;
+        bool isTransfering;
+        bool isKeepShotRotation;
+        bool isMovingRotatingVertically;
+        bool isSkiffDashing;
+        bool lastIsRotating;
+        bool lastIsZooming;
+        bool lastIsMoving;
+        bool lastIsFlying;
+        bool rotatedDuringCurrentMove;
+        bool rotatedDuringCurrentIdle;
+        int32_t lastAnimStateInd;
+        int32_t curAnimStateInd;
+        bool setFilterAnimStateFlag;
+        struct Vector2 refAnchorAngularVelocity;
+        double zoomVelocity;
+        bool needFastGotoIdealDir;
+        bool idealClimb2Move;
+        bool isSpecifyPoleClockwise;
+        bool isCounterClockwise;
+        bool isBoatRecovering;
+        int32_t lockingEnemyNearbyCount;
+        double lockingEnemyHeight;
+        bool paraKeepYaw;
+        bool shouldKeepElevationRotating;
+        bool isInBackUpSlope;
+        double idealSlope;
+        bool isKeepElevation;
+        bool shouldKeepZooming;
+        bool isRadiusSqueezing;
+        double idealCameraSphZoomRadius;
+        double idealCameraSphElevation;
+        double radiusBeforeMotion;
+        bool isCombatCamera;
+        bool isInCombat;
+        bool isLocalVehicleInCombat;
+        bool isKeepRotation;
+        struct Nullable_1_Double_ horizontalRecenteringKeepRotationTriggerTimer;
+        struct Nullable_1_Double_ verticalRecenteringKeepRotationTriggerTimer;
+        double horizontalRecenteringTriggerTimer;
+        double verticalRecenteringTriggerTimer;
+        bool isCombatPulling;
+        double combatPullingTime;
+        struct Nullable_1_Double_ _overrideMinCameraRadius;
+        struct Nullable_1_Double_ _overrideMinElevation;
     };
 
 #if !defined(_GHIDRA_) && !defined(_IDA_)

@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClInclude Include="src\user\cheat\GenshinCM.h" />
     <ClInclude Include="src\user\cheat\teleport\CustomTeleports.h" />
+    <ClInclude Include="src\user\cheat\visuals\CameraZoom.h" />
     <ClInclude Include="src\user\cheat\visuals\FPSUnlock.h" />
     <ClInclude Include="src\user\cheat\visuals\NoFog.h" />
     <ClInclude Include="src\user\cheat\world\AutoFish.h" />
@@ -95,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="src\user\cheat\teleport\CustomTeleports.cpp" />
     <ClCompile Include="src\user\cheat\GenshinCM.cpp" />
+    <ClCompile Include="src\user\cheat\visuals\CameraZoom.cpp" />
     <ClCompile Include="src\user\cheat\visuals\FPSUnlock.cpp" />
     <ClCompile Include="src\user\cheat\visuals\NoFog.cpp" />
     <ClCompile Include="src\user\cheat\world\AutoFish.cpp" />

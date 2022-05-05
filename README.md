@@ -100,12 +100,39 @@ As well as setting up **`genshin-cheat`** as startup project.
 
 <h1 align="center">Contributing</h1>
 
-Any contributions you make are greatly appreciated.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue.
-
+## Adding a feature
 1. Fork the Project
 1. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 1. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 1. Push to the Branch (`git push origin feature/AmazingFeature`)
 1. Open a Pull Request
+
+## Suggestions
+
+Open an issue with the title of the suggesstion you want to make.
+In the description, make sure it is descriptive enough so our devs can understand what you want and how you want it.  
+
+## Bugs
+Welcome to the short explanation for bug reporting, as well as the bug report template.
+
+1. Find a bug and write down what happened, as well as your first thoughts on what you think caused it.
+
+2. Try to reproduce the bug. For this you need to understand what actually happened, leading up to the bug and when the actual bug happened. To make sure you get all this information correctly taking various forms of documentations, such as video, screenshots etc is essential. These steps makes it a lot easier to try and figure out what actually happened. Try to replicate the scenario where the bug appeared, as close to the original as possible. What we would recommend for this step is using the bug reporting template which can be found on page 2 and simply adding the information you have / find in there.
+
+3. can it be reproduced? Yes or no. If yes: Explain in as much detail as possible what happens when the bug occurs and why it occurs. Try and explain it as cleanly and as concise as possible to make sure that the coders don’t have to read an essay to understand what could be a simple bug with a simple fix. For this, remember that information is very subjective so it is much better to over communicate than to risk confusion. If no: Try to provide as much information about the bug as possible, so that the testers will be able to replicate the scenario in which the bug occurred more easily so we can try to reproduce the bug.
+
+4. Tell us which version you are using. Otherwise we would be getting bug reports on the same issue, that has been infact fixed in the latest commits. copy the SHA / Version Number of the latest commit when you built the mod. For example: `bd17a00ec388f3b93624280cde9e1c66e740edf9` / Release 0.7
+
+Notes: Please remember to always record your testing sessions on your local hard drive and then upload them unlisted to youtube to conserve memory space on your computer and to give us easy access to your replays. This is to ensure that the optimal amount of documentation is available for the bug testers and coders to use as a guideline for either replicating scenarios, reproducing bugs or fixing them.
+
+TL:DR Record all your stuff while playing the mod and report any bugs to the issues section of this repository.
+
+### Bug reporting template
+Title: e.g. “Instantly kill enemy with Shackles“
+Description: “Game crashed if x, y, z“
+
+-- Footer -- 
+Date Occured: 5 / 3 / 2022
+Is it reproducible: Yes / Occasionally / No
+Latest Commit used: `bd17a00ec388f3b93624280cde9e1c66e740edf9`
+Release Version: 0.7

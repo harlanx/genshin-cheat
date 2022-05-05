@@ -32,10 +32,10 @@ namespace cheat::feature
 			"Not recommended for main accounts or used with high values.");
 		
 		ConfigWidget("Enabled", m_Enabled, "Automatically attack trees in range.");
-		ConfigWidget("Attack Delay (ms)", m_AttackDelay, 1, 0, 1000, "Delay before next tree attack.");
-		ConfigWidget("Repeat Delay (ms)", m_RepeatDelay, 1, 500, 1000, "Delay before attacking same tree. <500 will not work.");
+		ConfigWidget("Attack Delay (ms)", m_AttackDelay, 1, 0, 1000, "Delay before attacking the next tree (in ms).");
+		ConfigWidget("Repeat Delay (ms)", m_RepeatDelay, 1, 500, 1000, "Delay before attacking the same tree (in ms).\nValues <500ms will not work.");
 
-		ConfigWidget("Attacks per Tree", m_AttackPerTree, 1, 0, 100, "Counts of attack for one tree.\n" \
+		ConfigWidget("Attacks per Tree", m_AttackPerTree, 1, 0, 100, "Count of attacks for one tree.\n" \
 			"Recommended to set to 10 or lower to avoid attacking empty trees.\n" \
 			"Set to 0 for unlimited attacks (even empty trees, extremely high risk).\n" \
 			"Note: Memorized trees' attacks are reset after game restart."

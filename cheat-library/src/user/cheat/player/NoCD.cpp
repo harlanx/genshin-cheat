@@ -39,7 +39,7 @@ namespace cheat::feature
     void NoCD::DrawMain()
     {
 
-		ConfigWidget(f_UtimateMaxEnergy,
+		ConfigWidget("Max Burst Energy", f_UtimateMaxEnergy,
 			"Removes energy requirement for elemental bursts.\n" \
 			"(Energy bubble may appear incomplete but still usable).");
 
@@ -85,8 +85,8 @@ namespace cheat::feature
 
     void NoCD::DrawStatus() 
     {
-		ImGui::Text("NoCD [%s%s%s%s%s%s%s]",
-			f_AbilityReduce ? "Reduce" : "",
+		  ImGui::Text("Cooldown\n[%s%s%s%s%s]",
+			f_AbilityReduce ? fmt::format("Reduce {:.1f}", f_AbilityReduceValue.value()).c_str() : "",
 			f_AbilityReduce && (f_InstantBow || f_Sprint) ? "|" : "",
 			f_InstantBow ? "Bow" : "",
 			f_InstantBow && f_Sprint ? "|" : "",

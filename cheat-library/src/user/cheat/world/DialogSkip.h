@@ -12,6 +12,7 @@ namespace cheat::feature
 		config::Field<config::Toggle<Hotkey>> f_AutoSelectDialog;
 		config::Field<config::Toggle<Hotkey>> f_ExcludeImportant;
 		config::Field<config::Toggle<Hotkey>> f_FastDialog;
+		config::Field<float> f_TimeSpeedup;
 
 		static DialogSkip& GetInstance();
 

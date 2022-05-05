@@ -41,7 +41,7 @@ namespace cheat::feature
 		if (ImGui::TreeNode("Filters"))
 		{
 
-			ImGui::Text("Type filters");
+			ImGui::Text("Type Filters");
 
 			ConfigWidget(f_FilterChest, "Enable chest detection and filters.");
 			ConfigWidget(f_FilterInvestigates);

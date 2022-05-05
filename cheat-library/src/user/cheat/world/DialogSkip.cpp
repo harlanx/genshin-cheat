@@ -13,7 +13,8 @@ namespace cheat::feature
         NF(f_Enabled,               "Auto talk",                "AutoTalk", false),
         NF(f_AutoSelectDialog,      "Auto select dialog",       "AutoTalk", true),
         NF(f_ExcludeImportant,      "Exclude Katheryne/Tubby",  "AutoTalk", true),
-        NF(f_FastDialog,            "Fast dialog",              "AutoTalk", false)
+        NF(f_FastDialog,            "Fast dialog",              "AutoTalk", false),
+        NF(f_TimeSpeedup,           "Time Speed",               "AutoTalk", 5.0f)
     {
         HookManager::install(app::InLevelCutScenePageContext_UpdateView, InLevelCutScenePageContext_UpdateView_Hook);
         HookManager::install(app::InLevelCutScenePageContext_ClearView, InLevelCutScenePageContext_ClearView_Hook);
@@ -35,7 +36,11 @@ namespace cheat::feature
             ConfigWidget("Exclude Katheryne/Tubby", f_ExcludeImportant, "Exclude Kath/Tubby from auto-select.");
             ImGui::Unindent();
         }
-        ConfigWidget("Fast Dialog", f_FastDialog, "Speeds up dialog (includes crafting/cooking/cutscenes).");
+        ConfigWidget("Fast Dialog", f_FastDialog, "Speeds up Time");
+        if (f_FastDialog)
+        {
+            ConfigWidget(f_TimeSpeedup, 0.1f, 2.0f, 50.0f, "Time Speedup Multipler \nHigher Values will lead to sync issues with servers \nand is not recommended for Laggy Internet connections.");
+        }
     }
 
     bool DialogSkip::NeedStatusDraw() const
@@ -72,7 +77,7 @@ namespace cheat::feature
             return;
 
         if (f_FastDialog)
-            app::Time_set_timeScale(nullptr, 5.0f, nullptr);
+            app::Time_set_timeScale(nullptr, f_TimeSpeedup, nullptr);
 
         bool isImportant = false;
         if (f_ExcludeImportant)

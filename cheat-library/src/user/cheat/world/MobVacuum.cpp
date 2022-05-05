@@ -30,7 +30,7 @@ namespace cheat::feature
 
     const FeatureGUIInfo& MobVacuum::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "Mob vacuum", "World", true };
+        static const FeatureGUIInfo info{ "Mob Vacuum", "World", true };
         return info;
     }
 
@@ -43,12 +43,12 @@ namespace cheat::feature
     	BeginGroupPanel("Monsters", ImVec2(-1, 0));
         {
             filtersChanged |= ConfigWidget(f_IncludeMonsters, "Include monsters in vacuum.");
-            filtersChanged |= ConfigWidget(f_MonsterCommon, "Common Enemies."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_MonsterElites, "Elite Enemies."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_MonsterBosses, "Boss Enemies.");
+            filtersChanged |= ConfigWidget(f_MonsterCommon, "Common enemies."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_MonsterElites, "Elite enemies."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_MonsterBosses, "World and Trounce boss enemies.");
         }
     	EndGroupPanel();
-
+        
     	BeginGroupPanel("Animals", ImVec2(-1, 0));
         {
             filtersChanged |= ConfigWidget(f_IncludeAnimals, "Include animals in vacuum.");

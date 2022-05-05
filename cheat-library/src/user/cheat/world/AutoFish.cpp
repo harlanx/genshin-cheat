@@ -34,12 +34,12 @@ namespace cheat::feature
     void AutoFish::DrawMain()
     {
         ConfigWidget("Enabled", f_Enabled, "Automatically catch fish.");
-        ConfigWidget(f_DelayBeforeCatch, 100, 500, 4000, "Fish will be catch after this delay.");
+        ConfigWidget("Delay (ms)", f_DelayBeforeCatch, 100, 500, 4000, "Fish will be caught after this delay (in ms).");
 
         ImGui::Spacing();
 
         ConfigWidget(f_AutoRecastRod, "If enabled, rod will recasted. Without visualization.");
-        ConfigWidget(f_DelayBeforeRecast, 10, 100, 4000);
+        ConfigWidget("Delay (ms)", f_DelayBeforeRecast, 10, 100, 4000, "Rod will be recast after this delay (in ms).");
     }
 
     bool AutoFish::NeedStatusDraw() const

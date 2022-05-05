@@ -142,10 +142,10 @@ namespace cheat::feature
 			dir = dir + relativeEntity->left();
 
 		if (Hotkey(VK_SPACE).IsPressed())
-			dir = dir + relativeEntity->up();
+			dir = dir + avatarEntity->up();
 		
 		if (Hotkey(ImGuiKey_ModShift).IsPressed())
-			dir = dir + relativeEntity->down();
+			dir = dir + avatarEntity->down();
 
 		app::Vector3 prevPos = avatarEntity->relativePosition();
 		if (IsVectorZero(prevPos))

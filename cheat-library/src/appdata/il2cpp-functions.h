@@ -126,6 +126,10 @@ DO_APP_FUNC(0x036B8AA0, void, FishingModule_OnExitFishingRsp, (void* __this, voi
 DO_APP_FUNC(0x036BB0B0, void, FishingModule_onFishChosenNotify, (void* __this, void* notify, MethodInfo* method));
 
 
+// Camera
+DO_APP_FUNC(0x0289DE30, void, SCameraModuleInitialize_SetWarningLocateRatio, (SCameraModuleInitialize* __this, double deltaTime, CameraShareData* data, MethodInfo* method));
+
+
 // Utility
 DO_APP_FUNC(0x015DD910, float,   Miscs_CalcCurrentGroundWaterHeight, (void* __this, float x, float z, MethodInfo* method));
 DO_APP_FUNC(0x015DD1D0, float,   Miscs_CalcCurrentGroundHeight,      (void* __this, float x, float z, MethodInfo* method));

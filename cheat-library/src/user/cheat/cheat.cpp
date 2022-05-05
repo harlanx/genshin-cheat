@@ -42,6 +42,7 @@
 
 #include <cheat/visuals/NoFog.h>
 #include <cheat/visuals/FPSUnlock.h>
+#include <cheat/visuals/CameraZoom.h>
 
 #include "GenshinCM.h"
 
@@ -95,7 +96,8 @@ namespace cheat
 			FEAT_INST(AutoFish),
 
 			FEAT_INST(NoFog),
-			FEAT_INST(FPSUnlock)
+			FEAT_INST(FPSUnlock),
+			FEAT_INST(CameraZoom)
 
 			});
 #undef FEAT_INST
