@@ -59,7 +59,7 @@ namespace cheat::game::filters
 		SimpleFilter ButterflyWings = { app::EntityType__Enum_1::EnvAnimal, "Butterfly" };
 		SimpleFilter Crab = { app::EntityType__Enum_1::EnvAnimal, "Crab" };
 		SimpleFilter CrystalCore = { app::EntityType__Enum_1::EnvAnimal, "Wisp" };
-		SimpleFilter Fish = { app::EntityType__Enum_1::Monster, "Fish" };
+		SimpleFilter Fish = { app::EntityType__Enum_1::EnvAnimal, "Fish" };
 		SimpleFilter Frog = { app::EntityType__Enum_1::EnvAnimal, "Frog" };
 		SimpleFilter LizardTail = { app::EntityType__Enum_1::EnvAnimal, "Lizard" };
 		SimpleFilter LuminescentSpine = { app::EntityType__Enum_1::EnvAnimal, "FireFly" };
