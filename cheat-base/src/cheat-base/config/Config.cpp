@@ -91,7 +91,7 @@ namespace config
 	void SetupUpdate(TEvent<>* updateEvent)
 	{
 		s_UpdateEvent = updateEvent;
-		(*s_UpdateEvent) += FREE_METHOD_HANDLER(OnUpdate);
+		(*s_UpdateEvent) += FUNCTION_HANDLER(OnUpdate);
 	}
 
 	void UpdateSaveTimestamp()
@@ -240,9 +240,9 @@ namespace config
 	{
 		s_Entries.push_back(field);
 		UpdateField(field.get());
-		field->ChangedEvent += FREE_METHOD_HANDLER(OnFieldChanged);
-		field->MovedEvent += FREE_METHOD_HANDLER(OnFieldMoved);
-		field->RepositionEvent += FREE_METHOD_HANDLER(OnFieldReposition);
+		field->ChangedEvent += FUNCTION_HANDLER(OnFieldChanged);
+		field->MovedEvent += FUNCTION_HANDLER(OnFieldMoved);
+		field->RepositionEvent += FUNCTION_HANDLER(OnFieldReposition);
 	}
 
 	void Refresh()

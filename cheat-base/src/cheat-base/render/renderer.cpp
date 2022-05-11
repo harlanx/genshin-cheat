@@ -6,10 +6,7 @@
 
 #include <cheat-base/util.h>
 #include <cheat-base/render/backend/dx11-hook.h>
-
-#include <cheat-base/cheat/CheatManagerBase.h>
-
-#include "cheat-base/ResourceLoader.h"
+#include <cheat-base/ResourceLoader.h>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -45,8 +42,8 @@ namespace renderer
 
 		LOG_DEBUG("Initialize IMGui...");
 
-		backend::DX11Events::RenderEvent += FREE_METHOD_HANDLER(OnRender);
-		backend::DX11Events::InitializeEvent += FREE_METHOD_HANDLER(OnDX11Initialize);
+		backend::DX11Events::RenderEvent += FUNCTION_HANDLER(OnRender);
+		backend::DX11Events::InitializeEvent += FUNCTION_HANDLER(OnDX11Initialize);
 
 		backend::InitializeDX11Hooks();
 	}
@@ -169,12 +166,12 @@ namespace renderer
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.FontDefault = GetFontBySize(_globalFontSize);
 		ImGui::NewFrame();
-		ImGui::PushFont(GetFontBySize(_globalFontSize));
 
-		renderer::events::RenderEvent();
+		events::RenderEvent();
 
-		ImGui::PopFont();
 		ImGui::EndFrame();
 		ImGui::Render();
 
@@ -193,7 +190,7 @@ namespace renderer
 
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-		if (!cheat::events::WndProcEvent(hWnd, uMsg, wParam, lParam))
+		if (!events::WndProcEvent(hWnd, uMsg, wParam, lParam))
 			return true;
 
 		short key;
@@ -222,7 +219,7 @@ namespace renderer
 
 		bool canceled = false;
 		if (keyUpEvent)
-			canceled = !cheat::events::KeyUpEvent(key);
+			canceled = !events::KeyUpEvent(key);
 
 		if (IsInputLocked() || canceled)
 			return true;

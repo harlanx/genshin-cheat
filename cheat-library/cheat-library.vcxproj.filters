@@ -57,9 +57,6 @@
     <ClInclude Include="src\user\cheat\misc\sniffer\ProtoManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\user\cheat\misc\sniffer\SnifferWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\user\cheat\misc\Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -198,6 +195,27 @@
     <ClInclude Include="src\user\cheat\visuals\CameraZoom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\SnifferWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\PacketParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\messages\MessageBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\messages\MessageHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\messages\ModifyData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\messages\PacketData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user\cheat\misc\sniffer\MessageManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\Ruda-Bold.ttf" />
@@ -223,9 +241,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\user\cheat\misc\sniffer\ProtoManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\user\cheat\misc\sniffer\SnifferWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\user\cheat\misc\Debug.cpp">
@@ -352,6 +367,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\user\cheat\visuals\CameraZoom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\SnifferWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\PacketParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\messages\MessageBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\messages\MessageHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\messages\ModifyData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\messages\PacketData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user\cheat\misc\sniffer\MessageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

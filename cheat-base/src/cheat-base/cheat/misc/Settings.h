@@ -27,12 +27,17 @@ namespace cheat::feature
 		config::Field<bool> f_ConsoleLogging;
 		config::Field<bool> f_FileLogging;
 
+		config::Field<bool> f_FastExitEnable;
+		config::Field<Hotkey> f_HotkeyExit;
+
 		static Settings& GetInstance();
 
 		const FeatureGUIInfo& GetGUIInfo() const override;
 		void DrawMain() override;
 	
 	private:
+
+		void OnExitKeyPressed();
 		Settings();
 	};
 }

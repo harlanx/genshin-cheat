@@ -3,32 +3,24 @@
 
 #include <misc/cpp/imgui_stdlib.h>
 
-#include <cheat-base/Event.h>
-
 #include <cheat-base/render/renderer.h>
 #include <cheat-base/render/gui-util.h>
 #include <cheat-base/cheat/misc/Settings.h>
 
 namespace cheat
 {
-	namespace events
-	{
-		TCancelableEvent<short> KeyUpEvent{};
-		TCancelableEvent<HWND, UINT, WPARAM, LPARAM> WndProcEvent{};
-	}
 
 	void CheatManagerBase::Init(LPBYTE pFontData, DWORD dFontDataSize)
 	{
-		renderer::events::RenderEvent += MY_METHOD_HANDLER(CheatManagerBase::OnRender);
-		cheat::events::KeyUpEvent += MY_METHOD_HANDLER(CheatManagerBase::OnKeyUp);
-		cheat::events::WndProcEvent += MY_METHOD_HANDLER(CheatManagerBase::OnWndProc);
-
 		renderer::Init(pFontData, dFontDataSize);
+
+		events::RenderEvent += MY_METHOD_HANDLER(CheatManagerBase::OnRender);
+		events::KeyUpEvent += MY_METHOD_HANDLER(CheatManagerBase::OnKeyUp);
+		events::WndProcEvent += MY_METHOD_HANDLER(CheatManagerBase::OnWndProc);
 	}
 
 	CheatManagerBase::CheatManagerBase():
 		NF(m_SelectedSection, "", "General", 0),
-		m_IsMenuShowed(false),
 		m_IsBlockingInput(true),
 		m_IsPrevCursorActive(false)
 	{
@@ -401,13 +393,14 @@ namespace cheat
 		ImGui::RenderNotifications();
 	}
 
+	
 	void CheatManagerBase::OnRender()
 	{
 		auto& settings = feature::Settings::GetInstance();
 
 		DrawExternal();
 
-		if (m_IsMenuShowed)
+		if (s_IsMenuShowed)
 			DrawMenu();
 
 		if (m_IsProfileConfigurationShowed)
@@ -437,7 +430,7 @@ namespace cheat
 
 	void CheatManagerBase::CheckToggles(short key) const
 	{
-		if (m_IsMenuShowed || renderer::IsInputLocked())
+		if (s_IsMenuShowed || renderer::IsInputLocked())
 			return;
 
 		auto& settings = feature::Settings::GetInstance();
@@ -464,8 +457,8 @@ namespace cheat
 
 	void CheatManagerBase::ToggleMenuShow()
 	{
-		m_IsMenuShowed = !m_IsMenuShowed;
-		renderer::SetInputLock(this, m_IsMenuShowed && m_IsBlockingInput);
+		s_IsMenuShowed = !s_IsMenuShowed;
+		renderer::SetInputLock(this, s_IsMenuShowed && m_IsBlockingInput);
 		menuToggled = true;
 	}
 
@@ -486,7 +479,7 @@ namespace cheat
 
 		menuToggled = false;
 
-		if (m_IsMenuShowed)
+		if (s_IsMenuShowed)
 		{
 			m_IsPrevCursorActive = CursorGetVisibility();
 			if (!m_IsPrevCursorActive)
@@ -496,9 +489,9 @@ namespace cheat
 			CursorSetVisibility(false);
 	}
 
-	bool CheatManagerBase::IsMenuShowed() const
+	bool CheatManagerBase::IsMenuShowed()
 	{
-		return m_IsMenuShowed;
+		return s_IsMenuShowed;
 	}
 
 	void CheatManagerBase::PushFeature(Feature* feature)

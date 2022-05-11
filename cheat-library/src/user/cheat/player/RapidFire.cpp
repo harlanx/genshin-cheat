@@ -193,12 +193,12 @@ namespace cheat::feature
 		auto attacker = game::Entity(__this->fields._._._entity);
 		RapidFire& rapidFire = RapidFire::GetInstance();
 		if (!IsAttackByAvatar(attacker) || !rapidFire.f_Enabled)
-			return callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
+			return CALL_ORIGIN(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
 
 		auto& manager = game::EntityManager::instance();
 		auto originalTarget = manager.entity(targetID);
 		if (!game::filters::combined::OrganicTargets.IsValid(originalTarget))
-			return callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
+			return CALL_ORIGIN(LCBaseCombat_DoHitEntity_Hook, __this, targetID, attackResult, ignoreCheckCanBeHitInMP, method);
 
 		std::vector<cheat::game::Entity*> validEntities;
 		validEntities.push_back(originalTarget);
@@ -223,8 +223,8 @@ namespace cheat::feature
 			if (rapidFire.f_MultiHit) {
 				int attackCount = rapidFire.GetAttackCount(__this, entity->runtimeID(), attackResult);
 				for (int i = 0; i < attackCount; i++)
-					callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
-			} else callOrigin(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
+					CALL_ORIGIN(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
+			} else CALL_ORIGIN(LCBaseCombat_DoHitEntity_Hook, __this, entity->runtimeID(), attackResult, ignoreCheckCanBeHitInMP, method);
 		}
 	}
 }

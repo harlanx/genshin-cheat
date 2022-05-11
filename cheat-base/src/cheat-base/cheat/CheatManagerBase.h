@@ -1,7 +1,7 @@
 #pragma once
 #include <cheat-base/cheat/Feature.h>
 #include <cheat-base/config/Config.h>
-#include <cheat-base/Event.h>
+#include <cheat-base/events/event.hpp>
 
 #include <vector>
 #include <map>
@@ -11,17 +11,11 @@
 
 namespace cheat 
 {
-	namespace events
-	{
-		extern TCancelableEvent<short> KeyUpEvent;
-		extern TCancelableEvent<HWND, UINT, WPARAM, LPARAM> WndProcEvent;
-	}
-
 	class CheatManagerBase
 	{
 	public:
 		
-		bool IsMenuShowed() const;
+		static bool IsMenuShowed();
 
 		//static CheatManagerBase& GetInstance();
 		CheatManagerBase(CheatManagerBase const&) = delete;
@@ -48,7 +42,7 @@ namespace cheat
 		std::vector<std::string> m_ModuleOrder;
 		std::map<std::string, std::map<std::string, std::vector<Feature*>>> m_FeatureMap;
 
-		bool m_IsMenuShowed;
+		inline static bool s_IsMenuShowed = false;
 		bool m_IsBlockingInput;
 		bool m_IsPrevCursorActive;
 		bool m_IsProfileConfigurationShowed;
@@ -72,7 +66,6 @@ namespace cheat
 		virtual void DrawInfo();
 		void DrawFps();
 		static void DrawNotifications();
-
 		void PushFeature(Feature* feature);
 		void CheckToggles(short key) const;
 

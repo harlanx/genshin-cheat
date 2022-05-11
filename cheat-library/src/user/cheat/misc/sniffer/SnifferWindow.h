@@ -1,7 +1,7 @@
 #pragma once
 #include "PacketInfo.h"
 
-namespace cheat::feature::sniffer
+namespace sniffer
 {
 
 	class IFilter

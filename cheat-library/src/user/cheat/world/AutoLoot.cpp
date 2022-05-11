@@ -87,11 +87,13 @@ namespace cheat::feature
 					"If using with custom range, make sure this is turned on FIRST.");
 				ImGui::SameLine();
 				ImGui::TextColored(ImColor(255, 165, 0, 255), "Read the note!");
+				ImGui::Indent();
 				ConfigWidget("Chests", f_Chest, "Common, precious, luxurious, etc.");
 				ConfigWidget("Leyline", f_Leyline, "Mora/XP, overworld/Trounce bosses, etc.");
 				ConfigWidget("Search Points", f_Investigate, "Marked as Investigate/Search, etc.");
 				ConfigWidget("Quest Interacts", f_QuestInteract, "Valid quest interact points.");
 				ConfigWidget("Others", f_Others, "Book Pages, Spincrystals, etc.");
+				ImGui::Unindent();
 			}
 			EndGroupPanel();
 			ImGui::EndTable();
@@ -223,12 +225,12 @@ namespace cheat::feature
 		AutoLoot& autoLoot = AutoLoot::GetInstance();
 		bool canceled = autoLoot.OnCreateButton(entity);
 		if (!canceled)
-			callOrigin(LCSelectPickup_AddInteeBtnByID_Hook, __this, entity, method);
+			CALL_ORIGIN(LCSelectPickup_AddInteeBtnByID_Hook, __this, entity, method);
 	}
 
 	static bool LCSelectPickup_IsInPosition_Hook(void* __this, app::BaseEntity* entity, MethodInfo* method)
 	{
-		bool result = callOrigin(LCSelectPickup_IsInPosition_Hook, __this, entity, method);
+		bool result = CALL_ORIGIN(LCSelectPickup_IsInPosition_Hook, __this, entity, method);
 
 		AutoLoot& autoLoot = AutoLoot::GetInstance();
 		autoLoot.OnCheckIsInPosition(result, entity);
@@ -238,7 +240,7 @@ namespace cheat::feature
 
 	static bool LCSelectPickup_IsOutPosition_Hook(void* __this, app::BaseEntity* entity, MethodInfo* method)
 	{
-		bool result = callOrigin(LCSelectPickup_IsOutPosition_Hook, __this, entity, method);
+		bool result = CALL_ORIGIN(LCSelectPickup_IsOutPosition_Hook, __this, entity, method);
 
 		AutoLoot& autoLoot = AutoLoot::GetInstance();
 		autoLoot.OnCheckIsInPosition(result, entity);

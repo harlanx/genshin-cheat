@@ -220,7 +220,6 @@ namespace cheat::feature
 		
 		// Block interact
 		void OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool& cancelled);
-		void OnKeyUp(short key, bool& cancelled);
 
 		// Detecting stuff
 		void OnGameUpdate();

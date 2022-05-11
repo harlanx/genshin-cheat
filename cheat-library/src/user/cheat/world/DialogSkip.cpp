@@ -116,7 +116,7 @@ namespace cheat::feature
 
 	static void InLevelCutScenePageContext_UpdateView_Hook(app::InLevelCutScenePageContext* __this, MethodInfo* method)
 	{
-		callOrigin(InLevelCutScenePageContext_UpdateView_Hook, __this, method);
+		CALL_ORIGIN(InLevelCutScenePageContext_UpdateView_Hook, __this, method);
 
         DialogSkip& dialogSkip = DialogSkip::GetInstance();
         dialogSkip.OnCutScenePageUpdate(__this);
@@ -129,7 +129,7 @@ namespace cheat::feature
         float gameSpeed = app::Time_get_timeScale(nullptr, nullptr);
         if (gameSpeed > 1.0f)
             app::Time_set_timeScale(nullptr, 1.0f, nullptr);
-        callOrigin(InLevelCutScenePageContext_ClearView_Hook, __this, method);
+        CALL_ORIGIN(InLevelCutScenePageContext_ClearView_Hook, __this, method);
     }
 }
 

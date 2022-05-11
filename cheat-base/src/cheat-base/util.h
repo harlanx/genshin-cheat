@@ -63,7 +63,7 @@ namespace util
 	}
 
 	template<class T>
-	static T ReadValue(void* data, int offset, bool littleEndian = false)
+	static T ReadMapped(void* data, int offset, bool littleEndian = false)
 	{
 		char* cData = (char*)data;
 		T result = {};

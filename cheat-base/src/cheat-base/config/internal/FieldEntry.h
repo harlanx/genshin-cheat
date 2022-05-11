@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <cheat-base/Event.h>
+#include <cheat-base/events/event.hpp>
 #include <nlohmann/json.hpp>
 
 namespace config::internal

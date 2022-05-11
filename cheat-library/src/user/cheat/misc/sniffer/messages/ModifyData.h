@@ -1,21 +1,22 @@
 #pragma once
 #include <cheat-base/PipeTransfer.h>
+#include "MessageBase.h"
 
 enum class PacketModifyType 
 {
+	Unchanged,
 	Modified,
-	Blocked,
-	Unchanged
+	Blocked
 };
 
-class PacketModifyData : public PipeSerializedObject
+class ModifyData : public MessageBase
 {
 public:
-	PacketModifyData() : type(PacketModifyType::Unchanged), modifiedData() {}
-	~PacketModifyData() {}
-	
-	PacketModifyType type;
+	PacketModifyType modifyType;
 	std::string modifiedData;
+
+	ModifyData(const MessageHeader& header);
+	~ModifyData() {}
 
 	// Inherited via PipeSerializedObject
 	virtual void Write(PipeTransfer* transfer) override;

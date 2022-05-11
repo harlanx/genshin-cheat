@@ -196,7 +196,7 @@ namespace cheat::feature
 	static void BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo_Hook(app::BaseMoveSyncPlugin* __this, MethodInfo* method)
 	{
 		OnSyncTask(__this);
-		callOrigin(BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo_Hook, __this, method);
+		CALL_ORIGIN(BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo_Hook, __this, method);
 	}
 }
 

@@ -3,7 +3,7 @@
 #include <map>
 #include <detours.h>
 
-#define callOrigin(function, ...) \
+#define CALL_ORIGIN(function, ...) \
 	HookManager::call(function, __func__, __VA_ARGS__)
 
 class HookManager

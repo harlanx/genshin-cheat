@@ -111,7 +111,7 @@ protected:
 		if (address == 0)
 			return {};
 
-		int offset = util::template ReadValue<int>((void*)address, codeOffset, true);
+		int offset = util::ReadMapped<int>((void*)address, codeOffset, true);
 		return reinterpret_cast<R>(address + offset + codeOffset + sizeof(int));
 	}
 

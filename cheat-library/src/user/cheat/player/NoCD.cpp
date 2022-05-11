@@ -41,7 +41,7 @@ namespace cheat::feature
 
 		ConfigWidget("Max Burst Energy", f_UtimateMaxEnergy,
 			"Removes energy requirement for elemental bursts.\n" \
-			"(Energy bubble may appear incomplete but still usable).");
+			"(Energy bubble may appear incomplete but still usable.)");
 
 		ConfigWidget("## AbilityReduce", f_AbilityReduce); ImGui::SameLine();
 		ConfigWidget("Reduce Skill/Burst Cooldown", f_AbilityReduceValue, 0.1f, 0.2f, 1.0f, 
@@ -105,7 +105,7 @@ namespace cheat::feature
 		if (noCD.f_UtimateMaxEnergy)
 			return true;
 
-		return callOrigin(LCAvatarCombat_IsEnergyMax_Hook, __this, method);
+		return CALL_ORIGIN(LCAvatarCombat_IsEnergyMax_Hook, __this, method);
 	}
 
 	// Multipler CoolDown Timer | RyujinZX#6666
@@ -120,7 +120,7 @@ namespace cheat::feature
 				cdMultipler = noCD.f_AbilityReduceValue / 1;
 			}
 		}		
-		return callOrigin(LCAvatarCombat_OnSkillStart, __this, skillID, cdMultipler, method);
+		return CALL_ORIGIN(LCAvatarCombat_OnSkillStart, __this, skillID, cdMultipler, method);
 	}
 
 	// Check sprint cooldown, we just return true if sprint no cooldown enabled.
@@ -130,7 +130,7 @@ namespace cheat::feature
 		if (noCD.f_Sprint)
 			return true;
 
-		return callOrigin(HumanoidMoveFSM_CheckSprintCooldown_Hook, __this, method);
+		return CALL_ORIGIN(HumanoidMoveFSM_CheckSprintCooldown_Hook, __this, method);
 	}
 
 	// This function raise when abilities, whose has charge, is charging, like a bow.
@@ -151,7 +151,7 @@ namespace cheat::feature
 		// For now only "_Enchanted_Time" found for bow charging, maybe there are more. Need to continue research.
 		if (noCD.f_InstantBow && il2cppi_to_string(key) == "_Enchanted_Time")
 			value = maxValue;
-		callOrigin(ActorAbilityPlugin_AddDynamicFloatWithRange_Hook, __this, key, value, minValue, maxValue, forceDoAtRemote, method);
+		CALL_ORIGIN(ActorAbilityPlugin_AddDynamicFloatWithRange_Hook, __this, key, value, minValue, maxValue, forceDoAtRemote, method);
 	}
 }
 

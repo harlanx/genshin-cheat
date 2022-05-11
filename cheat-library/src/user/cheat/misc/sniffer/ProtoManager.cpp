@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-namespace cheat::feature::sniffer
+namespace sniffer
 {
 
 	static class ErrorCollector : public google::protobuf::compiler::MultiFileErrorCollector
@@ -83,7 +83,7 @@ namespace cheat::feature::sniffer
 		auto message = ParseMessage(name, data);
 		if (message == nullptr)
 		{
-			LOG_ERROR("Failed to parse message with name %s.", name);
+			LOG_ERROR("Failed to parse message with name %s.", name.c_str());
 			return {};
 		}
 

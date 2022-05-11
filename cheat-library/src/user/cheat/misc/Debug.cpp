@@ -27,7 +27,7 @@ namespace cheat::feature
 
 	Debug::Debug() : Feature()
 	{
-        events::GameUpdateEvent += FREE_METHOD_HANDLER(OnGameUpdate);
+        events::GameUpdateEvent += FUNCTION_HANDLER(OnGameUpdate);
 		HookManager::install(app::ActorAbilityPlugin_OnEvent, ActorAbilityPlugin_OnEvent_Hook);
 		// HookManager::install(app::LuaShellManager_ReportLuaShellResult, LuaShellManager_ReportLuaShellResult_Hook);
 		// HookManager::install(app::LuaShellManager_DoString, LuaShellManager_DoString_Hook);
@@ -80,13 +80,13 @@ namespace cheat::feature
 
 #undef printString
 
-        callOrigin(SendInfo_Hook, __this, info, method);
+        CALL_ORIGIN(SendInfo_Hook, __this, info, method);
     }
 
     static void Lua_xlua_pushasciistring_Hook(void* __this, void* L, app::String* str, MethodInfo* method)
     {
         LOG_DEBUG("Pushed string: %s", il2cppi_to_string(str).c_str());
-        callOrigin(Lua_xlua_pushasciistring_Hook, __this, L, str, method);
+        CALL_ORIGIN(Lua_xlua_pushasciistring_Hook, __this, L, str, method);
     }
 
     static int checkCount = 0;
@@ -97,27 +97,27 @@ namespace cheat::feature
             LOG_DEBUG("After size %d; name: %s", chunk->bounds == nullptr ? chunk->max_length : chunk->bounds->length, il2cppi_to_string(chunkName).c_str());
             checkCount--;
         }
-        return callOrigin(LuaEnv_DoString_Hook, __this, chunk, chunkName, env, method);
+        return CALL_ORIGIN(LuaEnv_DoString_Hook, __this, chunk, chunkName, env, method);
     }
 
     static void LuaShellManager_DoString_Hook(void* __this, app::Byte__Array* byteArray, MethodInfo* method)
     {
         LOG_DEBUG("Size %d", byteArray->bounds == nullptr ? byteArray->max_length : byteArray->bounds->length);
         checkCount = 10;
-        callOrigin(LuaShellManager_DoString_Hook, __this, byteArray, method);
+        CALL_ORIGIN(LuaShellManager_DoString_Hook, __this, byteArray, method);
     }
 
     static void LuaShellManager_ReportLuaShellResult_Hook(void* __this, app::String* type, app::String* value, MethodInfo* method)
     {
         std::cout << "Type: " << il2cppi_to_string(type) << std::endl;
         std::cout << "Value: " << il2cppi_to_string(value) << std::endl;
-        callOrigin(LuaShellManager_ReportLuaShellResult_Hook, __this, type, value, method);
+        CALL_ORIGIN(LuaShellManager_ReportLuaShellResult_Hook, __this, type, value, method);
     }
 
     static bool ActorAbilityPlugin_OnEvent_Hook(void* __this, app::BaseEvent* e, MethodInfo* method)
     {
         // LOG_DEBUG("Fire event: %s, targetID %u", magic_enum::enum_name(e->fields.eventID).data(), e->fields.targetID);
-        return callOrigin(ActorAbilityPlugin_OnEvent_Hook, __this, e, method);
+        return CALL_ORIGIN(ActorAbilityPlugin_OnEvent_Hook, __this, e, method);
     }
 
     static void DrawWaypoints(UniDict<uint32_t, UniDict<uint32_t, app::MapModule_ScenePointData>*>* waypointsGrops)

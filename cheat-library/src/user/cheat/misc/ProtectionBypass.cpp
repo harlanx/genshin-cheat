@@ -69,7 +69,7 @@ namespace cheat::feature
 			return newArray;
 		}
 
-		app::Byte__Array* result = callOrigin(RecordUserData_Hook, nType);
+		app::Byte__Array* result = CALL_ORIGIN(RecordUserData_Hook, nType);
 		auto resultArray = TO_UNI_ARRAY(result, byte);
 
 		auto length = resultArray->length();

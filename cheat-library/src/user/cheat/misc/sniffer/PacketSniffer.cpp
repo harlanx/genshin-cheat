@@ -4,32 +4,22 @@
 #include "SnifferWindow.h"
 
 #include <fstream>
-
 #include <helpers.h>
 
 namespace cheat::feature 
 {
-
-	static int32_t KcpNative_kcp_client_send_packet_Hook(void* __this, void* kcp_client, app::KcpPacket_1* packet, MethodInfo* method);
-	static bool KcpClient_TryDequeueEvent_Hook(void* __this, app::ClientKcpEvent* evt, MethodInfo* method);
-
 	PacketSniffer::PacketSniffer() : Feature(),
 		NF(m_CapturingEnabled, "Capturing", "PacketSniffer", false),
 		NF(m_ManipulationEnabled, "Manipulation", "PacketSniffer", false),
 		NF(m_PipeEnabled, "Pipe", "PacketSniffer", false),
 		NF(m_ProtoDirPath, "Proto Dir Path", "PacketSniffer", ""),
 		NF(m_ProtoIDFilePath, "Proto ID File Path", "PacketSniffer", ""),
-
-		m_ProtoManager(),
-		m_NextTimeToConnect(0),
-		m_Pipe({ "genshin_packet_pipe" })
+		m_PacketParser(m_ProtoDirPath, m_ProtoIDFilePath)
 	{
-		m_ProtoManager.Load(m_ProtoIDFilePath, m_ProtoDirPath);
+		sniffer::MessageManager::Connect("genshin_packet_pipe");
+
 		HookManager::install(app::KcpNative_kcp_client_send_packet, KcpNative_kcp_client_send_packet_Hook);
 		HookManager::install(app::KcpClient_TryDequeueEvent, KcpClient_TryDequeueEvent_Hook);
-
-		if (m_CapturingEnabled && m_PipeEnabled && !TryConnectToPipe())
-			LOG_WARNING("Failed connect to pipe.");
 	}
 
 	const FeatureGUIInfo& PacketSniffer::GetGUIInfo() const
@@ -45,8 +35,8 @@ namespace cheat::feature
 
 		if (!m_ProtoDirPath.value().empty() && !m_ProtoIDFilePath.value().empty())
 		{
-			m_ProtoManager.LoadIDFile(m_ProtoIDFilePath);
-			m_ProtoManager.LoadProtoDir(m_ProtoDirPath);
+			m_PacketParser.SetProtoIDPath(m_ProtoIDFilePath);
+			m_PacketParser.SetProtoDir(m_ProtoDirPath);
 			return true;
 		}
 
@@ -105,84 +95,32 @@ namespace cheat::feature
 		return instance;
 	}
 
-	void PacketSniffer::ProcessUnionMessage(const PacketData& packetData)
+	bool ProcessModifiedData(app::KcpPacket_1* packet)
 	{
-		nlohmann::json cmdListObject = nlohmann::json::parse(packetData.messageJson);
+		auto modifyData = sniffer::MessageManager::WaitFor<ModifyData>();
+		if (!modifyData)
+			return false;
 
-		for (auto& cmd : cmdListObject["cmdList"])
+		switch (modifyData->modifyType)
 		{
-			uint32_t id = cmd["messageId"];
-			std::string body = cmd["body"];
-			auto bodyBytes = util::base64_decode(body);
-
-			auto combatJsonString = m_ProtoManager.GetJson(id, bodyBytes);
-			if (!combatJsonString)
-				continue;
-
-			if (id != 347)
-			{
-				PacketData newPacketData;
-				newPacketData.headData = packetData.headData;
-				newPacketData.headJson = packetData.headJson;
-				newPacketData.messageId = id;
-				newPacketData.messageData = bodyBytes;
-				newPacketData.messageJson = *combatJsonString;
-				auto name = m_ProtoManager.GetName(packetData.messageId);
-				newPacketData.name = !name ? "<Unknown>" : *name;
-				newPacketData.type = packetData.type;
-				newPacketData.valid = true;
-
-				sniffer::PacketInfo packetInfo = sniffer::PacketInfo(newPacketData);
-				sniffer::SnifferWindow::GetInstance().OnPacketIO(packetInfo);
-				continue;
-			}
-
-			auto combatJsonObject = nlohmann::json::parse(*combatJsonString);
-			for (auto& invokeJson : combatJsonObject["invokeList"])
-			{
-				std::string argumentType = invokeJson["argumentType"];
-				static std::map<std::string, std::string> typeMap = {
-					{ "ENTITY_MOVE", "EntityMoveInfo" },
-					{ "COMBAT_EVT_BEING_HIT", "EvtBeingHitInfo" },
-					{ "COMBAT_ANIMATOR_STATE_CHANGED", "EvtAnimatorStateChangedInfo" },
-					{ "COMBAT_FACE_TO_DIR", "EvtFaceToDirInfo" },
-					{ "COMBAT_SET_ATTACK_TARGET", "EvtSetAttackTargetInfo" },
-					{ "COMBAT_RUSH_MOVE", "EvtRushMoveInfo" },
-					{ "COMBAT_ANIMATOR_PARAMETER_CHANGED", "EvtAnimatorParameterInfo" },
-					{ "SYNC_ENTITY_POSITION", "EvtSyncEntityPositionInfo" },
-					{ "COMBAT_STEER_MOTION_INFO", "EvtCombatSteerMotionInfo" },
-					{ "COMBAT_FORCE_SET_POSITION_INFO", "EvtCombatForceSetPosInfo" },
-					{ "COMBAT_COMPENSATE_POS_DIFF", "EvtCompensatePosDiffInfo" },
-					{ "COMBAT_MONSTER_DO_BLINK", "EvtMonsterDoBlink" },
-					{ "COMBAT_FIXED_RUSH_MOVE", "EvtFixedRushMove" },
-					{ "COMBAT_SYNC_TRANSFORM", "EvtSyncTransform" },
-					{ "COMBAT_LIGHT_CORE_MOVE", "EvtLightCoreMove" }
-				};
-
-				if (typeMap.count(argumentType) == 0)
-				{
-					LOG_WARNING("Failed to find argument type %s", argumentType.c_str());
-					continue;
-				}
-
-				PacketData newPacketData;
-				newPacketData.name = typeMap[argumentType];
-				newPacketData.messageId = packetData.messageId;
-				newPacketData.headData = packetData.headData;
-				newPacketData.headJson = packetData.headJson;
-				newPacketData.messageData = util::base64_decode(invokeJson["combatData"]);
-
-				auto jsonData = m_ProtoManager.GetJson(newPacketData.name, newPacketData.messageData);
-				newPacketData.messageJson = jsonData ? *jsonData : "";
-				newPacketData.type = packetData.type;
-				newPacketData.valid = true;
-
-				sniffer::SnifferWindow::GetInstance().OnPacketIO(sniffer::PacketInfo(newPacketData));
-			}
+		case PacketModifyType::Blocked:
+			return true;
+		case PacketModifyType::Modified:
+		{
+			auto dataSize = modifyData->modifiedData.size();
+			packet->data = new byte[dataSize]();
+			memcpy_s(packet->data, dataSize, modifyData->modifiedData.data(), dataSize);
+			packet->dataLen = dataSize;
 		}
+		break;
+		case PacketModifyType::Unchanged:
+		default:
+			break;
+		}
+		return false;
 	}
 
-	bool PacketSniffer::OnPacketIO(app::KcpPacket_1* packet, PacketType type)
+	bool PacketSniffer::OnPacketIO(app::KcpPacket_1* packet, PacketIOType type)
 	{
 		if (!m_CapturingEnabled)
 			return true;
@@ -191,58 +129,26 @@ namespace cheat::feature
 		if (!packetData.valid)
 			return true;
 
-		auto name = m_ProtoManager.GetName(packetData.messageId);
-		if (!name)
-			return true;
-		packetData.name = *name;
-		packetData.type = type;
-
-		auto message = m_ProtoManager.GetJson(packetData.messageId, packetData.messageData);
-		if (!message)
-			return true;
-		packetData.messageJson = *message;
-
-		if (packetData.messageId == 55)
-			ProcessUnionMessage(packetData);
-
-		sniffer::PacketInfo info(packetData);
-		sniffer::SnifferWindow::GetInstance().OnPacketIO(info);
-
-		if (!m_PipeEnabled || (!m_Pipe.IsPipeOpened() && !TryConnectToPipe()))
+		packetData.ioType = type;
+		packetData.blockModeEnabled = m_ManipulationEnabled;
+		bool parsed = m_PacketParser.Parse(packetData);
+		if (!parsed)
 			return true;
 
-		packetData.waitForModifyData = false; // m_ManipulationEnabled;
-		SendData(packetData);
+		sniffer::SnifferWindow::GetInstance().OnPacketIO({packetData});
+		sniffer::MessageManager::Send(packetData);
 
-		//if (m_ManipulationEnabled)
-		//{
-		//	auto modifyData = ReceiveData();
-		//	if (modifyData.type == PacketModifyType::Blocked)
-		//		return false;
+		bool canceled = m_ManipulationEnabled && ProcessModifiedData(packet);
+		if (m_PacketParser.IsUnionPacket(packetData))
+		{
+			for (auto& nestedPacketData : m_PacketParser.ParseUnionPacket(packetData))
+			{
+				sniffer::SnifferWindow::GetInstance().OnPacketIO({ nestedPacketData });
+				sniffer::MessageManager::Send(nestedPacketData);
+			}
+		}
 
-		//	if (modifyData.type == PacketModifyType::Modified)
-		//	{
-		//		auto dataSize = modifyData.modifiedData.size();
-		//		packet->packetData = new byte[dataSize]();
-		//		memcpy_s(packet->packetData, dataSize, modifyData.modifiedData.packetData(), dataSize);
-		//		packet->dataLen = dataSize;
-		//	}
-		//}
-		return true;
-	}
-
-	bool PacketSniffer::TryConnectToPipe()
-	{
-		std::time_t currTime = std::time(0);
-		if (m_NextTimeToConnect > currTime)
-			return false;
-		
-		bool result = m_Pipe.Connect();
-		if (result)
-			LOG_INFO("Connected to pipe successfully.");
-		else
-			m_NextTimeToConnect = currTime + 5; // delay in 5 sec
-		return result;
+		return !canceled;
 	}
 
 	char* PacketSniffer::EncryptXor(void* content, uint32_t length)
@@ -260,96 +166,70 @@ namespace cheat::feature
 		return (char*)result;
 	}
 
-	bool PacketSniffer::isLittleEndian()
-	{
-		unsigned int i = 1;
-		char* c = (char*)&i;
-		return (*c);
-	}
-
 	PacketData PacketSniffer::ParseRawPacketData(char* encryptedData, uint32_t length)
 	{
+		PacketData packetData = sniffer::MessageManager::CreateMessage<PacketData>();
 		// Decrypting packetData
 		auto data = EncryptXor(encryptedData, length);
 
-		uint16_t magicHead = read<uint16_t>(data, 0);
+		uint16_t magicHead = util::ReadMapped<uint16_t>(data, 0);
 
 		if (magicHead != 0x4567)
 		{
 			LOG_ERROR("Head magic value for packet is not valid.");
-			return {};
+			return packetData;
 		}
 
-		uint16_t magicEnd = read<uint16_t>(data, length - 2);
+		uint16_t magicEnd = util::ReadMapped<uint16_t>(data, length - 2);
 		if (magicEnd != 0x89AB)
 		{
 			LOG_ERROR("End magic value for packet is not valid.");
-			return {};
+			return packetData;
 		}
 
-		uint16_t messageId = read<uint16_t>(data, 2);
-		uint16_t headSize = read<uint16_t>(data, 4);
-		uint32_t contenSize = read<uint32_t>(data, 6);
+		uint16_t messageId = util::ReadMapped<uint16_t>(data, 2);
+		uint16_t headSize = util::ReadMapped<uint16_t>(data, 4);
+		uint32_t contenSize = util::ReadMapped<uint32_t>(data, 6);
 
 		if (length < headSize + contenSize + 12)
 		{
 			LOG_ERROR("Packet size is not valid.");
-			return {};
+			return packetData;
 		}
 
-		PacketData packetData = {};
 		packetData.valid = true;
-		packetData.messageId = messageId;
+		packetData.packetID = messageId;
 
-		packetData.headData = std::vector<byte>((size_t)headSize, 0);
-		memcpy_s(packetData.headData.data(), headSize, data + 10, headSize);
+		packetData.headRawData = std::vector<byte>((size_t)headSize, 0);
+		memcpy_s(packetData.headRawData.data(), headSize, data + 10, headSize);
 
-		packetData.messageData = std::vector<byte>((size_t)contenSize, 0);
-		memcpy_s(packetData.messageData.data(), contenSize, data + 10 + headSize, contenSize);
+		packetData.messageRawData = std::vector<byte>((size_t)contenSize, 0);
+		memcpy_s(packetData.messageRawData.data(), contenSize, data + 10 + headSize, contenSize);
 
 		delete[] data;
 
 		return packetData;
 	}
 
-	void PacketSniffer::SendData(PacketData& data)
+	bool PacketSniffer::KcpClient_TryDequeueEvent_Hook(void* __this, app::ClientKcpEvent* evt, MethodInfo* method)
 	{
-		if (m_Pipe.IsPipeOpened())
-		{
-			//LOG_DEBUG("%s packetData with mid %d.", magic_enum::enum_name(packetData.type).packetData(), packetData.messageId);
-			m_Pipe.WriteObject(data);
-		}
-	}
-
-	PacketModifyData PacketSniffer::ReceiveData()
-	{
-		PacketModifyData md{};
-		if (m_Pipe.IsPipeOpened())
-		{
-			m_Pipe.ReadObject(md);
-		}
-		return md;
-	}
-
-	static bool KcpClient_TryDequeueEvent_Hook(void* __this, app::ClientKcpEvent* evt, MethodInfo* method)
-	{
-		auto result = callOrigin(KcpClient_TryDequeueEvent_Hook, __this, evt, method);
+		auto result = CALL_ORIGIN(KcpClient_TryDequeueEvent_Hook, __this, evt, method);
 
 		if (!result || evt->_evt.type != app::KcpEventType__Enum::EventRecvMsg ||
 			evt->_evt.packet == nullptr || evt->_evt.packet->data == nullptr)
 			return result;
 
-		auto& sniffer = PacketSniffer::GetInstance();
-		return sniffer.OnPacketIO(evt->_evt.packet, PacketType::Receive);
+		auto& sniffer = GetInstance();
+		return sniffer.OnPacketIO(evt->_evt.packet, PacketIOType::Receive);
 	}
 
-	static int32_t KcpNative_kcp_client_send_packet_Hook(void* __this, void* kcp_client, app::KcpPacket_1* packet, MethodInfo* method)
+	int32_t PacketSniffer::KcpNative_kcp_client_send_packet_Hook(void* __this, void* kcp_client, app::KcpPacket_1* packet, MethodInfo* method)
 	{
-		auto& sniffer = PacketSniffer::GetInstance();
-		if (!sniffer.OnPacketIO(packet, PacketType::Send))
+		auto& sniffer = GetInstance();
+		if (!sniffer.OnPacketIO(packet, PacketIOType::Send))
 			return 0;
 
-		return callOrigin(KcpNative_kcp_client_send_packet_Hook, __this, kcp_client, packet, method);
+		return CALL_ORIGIN(KcpNative_kcp_client_send_packet_Hook, __this, kcp_client, packet, method);
 	}
 }
 

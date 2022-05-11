@@ -216,7 +216,7 @@ namespace cheat::feature
 		if (noClip.f_Enabled)
 			return;
 
-		callOrigin(HumanoidMoveFSM_LateTick_Hook, __this, deltaTime, method);
+		CALL_ORIGIN(HumanoidMoveFSM_LateTick_Hook, __this, deltaTime, method);
 	}
 }
 

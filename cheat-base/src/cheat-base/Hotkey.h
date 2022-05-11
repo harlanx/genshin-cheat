@@ -3,13 +3,24 @@
 #include <string>
 #include <unordered_set>
 
+#include <cheat-base/events/event.hpp>
+
 class Hotkey 
 {
 public:
 
     Hotkey();
+    Hotkey(const Hotkey& other);
     Hotkey(short key);
     Hotkey(std::vector<short> keys);
+    ~Hotkey();
+
+	Hotkey& operator=(Hotkey& hotkey) noexcept;
+	Hotkey& operator=(Hotkey&& hotkey) noexcept;
+
+	bool operator== (const Hotkey& c2) const;
+	bool operator!= (const Hotkey& c2) const;
+	bool operator-(const Hotkey& c2);
 
     bool IsPressed() const;
     bool IsPressed(short keyDown) const;
@@ -19,28 +30,14 @@ public:
 
     std::vector<short> GetKeys() const;
 
-    friend bool operator== (const Hotkey& c1, const Hotkey& c2) {
-        return c1.keys == c2.keys;
-    }
-
-    friend bool operator!= (const Hotkey & c1, const Hotkey & c2){
-        return !(c1 == c2);
-    }
-
-    friend bool operator-(const Hotkey& c1, const Hotkey& c2)
-    {
-		for (short key : c1.keys)
-		{
-            if (c2.keys.count(key) == 0)
-                return true;
-		}
-        return false;
-    }
-
     operator std::string() const;
 
     static Hotkey GetPressedHotkey();
 
+    IEvent<>& PressedEvent;
 private:
-    std::unordered_set<short> keys;
+    TEvent<> m_PressedEvent;
+    std::unordered_set<short> m_Keys;
+
+    void OnKeyUp(short key, bool& canceled);
 };

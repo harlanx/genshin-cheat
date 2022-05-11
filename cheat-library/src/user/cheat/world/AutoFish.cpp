@@ -60,7 +60,7 @@ namespace cheat::feature
 
 	void AutoFish::FishingModule_onFishChosenNotify_Hook(void* __this, void* notify, MethodInfo* method)
 	{
-        callOrigin(FishingModule_onFishChosenNotify_Hook, __this, notify, method);
+        CALL_ORIGIN(FishingModule_onFishChosenNotify_Hook, __this, notify, method);
 
 		auto& autoFish = GetInstance();
 		if (!autoFish.f_Enabled)
@@ -74,7 +74,7 @@ namespace cheat::feature
         auto& autoFish = GetInstance();
         if (!autoFish.f_Enabled)
         {
-            callOrigin(FishingModule_OnFishBiteRsp_Hook, __this, rsp, method);
+            CALL_ORIGIN(FishingModule_OnFishBiteRsp_Hook, __this, rsp, method);
             return;
         }
 
@@ -86,7 +86,7 @@ namespace cheat::feature
 		auto& autoFish = GetInstance();
 		if (!autoFish.f_Enabled)
 		{
-            callOrigin(FishingModule_OnFishBattleBeginRsp_Hook, __this, rsp, method);
+            CALL_ORIGIN(FishingModule_OnFishBattleBeginRsp_Hook, __this, rsp, method);
 			return;
 		}
 
@@ -96,7 +96,7 @@ namespace cheat::feature
 
 	void AutoFish::FishingModule_OnFishBattleEndRsp_Hook(void* __this, app::FishBattleEndRsp* rsp, MethodInfo* method)
 	{
-        callOrigin(FishingModule_OnFishBattleEndRsp_Hook, __this, rsp, method);
+        CALL_ORIGIN(FishingModule_OnFishBattleEndRsp_Hook, __this, rsp, method);
 
         auto& autoFish = GetInstance();
 
@@ -128,7 +128,7 @@ namespace cheat::feature
 
 	void AutoFish::FishingModule_OnExitFishingRsp_Hook(void* __this, void* rsp, MethodInfo* method)
 	{
-        callOrigin(FishingModule_OnExitFishingRsp_Hook, __this, rsp, method);
+        CALL_ORIGIN(FishingModule_OnExitFishingRsp_Hook, __this, rsp, method);
 
         auto& autoFish = GetInstance();
 
@@ -138,7 +138,7 @@ namespace cheat::feature
 
 	void AutoFish::FishingModule_RequestFishCastRod_Hook(void* __this, uint32_t baitId, uint32_t rodId, app::Vector3 pos, uint32_t rodEntityId, MethodInfo* method)
 	{
-        callOrigin(FishingModule_RequestFishCastRod_Hook, __this, baitId, rodId, pos, rodEntityId, method);
+        CALL_ORIGIN(FishingModule_RequestFishCastRod_Hook, __this, baitId, rodId, pos, rodEntityId, method);
 
         auto& autoFish = GetInstance();
 

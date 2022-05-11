@@ -40,7 +40,7 @@ static HRESULT __stdcall Present(IDXGISwapChain* pChain, const UINT SyncInterval
 	// render function
 	backend::DX11Events::RenderEvent(pContext);
 
-	return callOrigin(Present, pChain, SyncInterval, Flags);
+	return CALL_ORIGIN(Present, pChain, SyncInterval, Flags);
 }
 
 static IDXGISwapChainPresent findDirect11Present()

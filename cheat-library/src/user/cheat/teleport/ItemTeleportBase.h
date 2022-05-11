@@ -20,8 +20,6 @@ namespace cheat::feature
 
 		virtual bool NeedInfoDraw() const;
 		virtual void DrawInfo() override;
-
-		void OnKeyUp(short key, bool& cancelled);
 	
 	protected:
 		ItemTeleportBase(const std::string& section, const std::string& name);
@@ -32,6 +30,8 @@ namespace cheat::feature
 		void DrawEntities();
 		void DrawNearestEntityInfo();
 		
+		void OnTeleportKeyPressed();
+
 		std::string section;
 		std::string name;
 	};

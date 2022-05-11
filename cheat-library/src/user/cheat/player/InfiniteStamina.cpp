@@ -111,7 +111,7 @@ namespace cheat::feature
 		app::PropType__Enum propType = app::AvatarProp_DecodePropType(nullptr, key, nullptr);
 		auto& infiniteStamina = InfiniteStamina::GetInstance();
 		if (infiniteStamina.OnPropertySet(propType))
-			callOrigin(AvatarPropDictionary_SetItem_Hook, __this, key, value, method);
+			CALL_ORIGIN(AvatarPropDictionary_SetItem_Hook, __this, key, value, method);
 	}
 }
 

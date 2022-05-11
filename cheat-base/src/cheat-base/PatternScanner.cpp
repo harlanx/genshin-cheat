@@ -461,7 +461,7 @@ uintptr_t PatternScanner::SearchXref(HMODULE hModule, const OffsetSignature& xre
 	if (!address)
 		return 0;
 
-	uint8_t callOpcode = util::ReadValue<uint8_t>((void*)address, xrefPattern.offset, true);
+	uint8_t callOpcode = util::ReadMapped<uint8_t>((void*)address, xrefPattern.offset, true);
 	int opcodeOffset = 0;
 	switch (callOpcode)
 	{
@@ -478,7 +478,7 @@ uintptr_t PatternScanner::SearchXref(HMODULE hModule, const OffsetSignature& xre
 		return 0;
 	}
 
-	int callOffset = util::ReadValue<int>((void*)address, xrefPattern.offset + opcodeOffset, true);
+	int callOffset = util::ReadMapped<int>((void*)address, xrefPattern.offset + opcodeOffset, true);
 	uintptr_t dataAddress = address + xrefPattern.offset + 4 + opcodeOffset + callOffset;
 
 	//if (!IsFunctionEntry(functionAddress))

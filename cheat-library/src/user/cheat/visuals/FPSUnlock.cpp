@@ -22,7 +22,7 @@ namespace cheat::feature
     void FPSUnlock::DrawMain()
     {
         ConfigWidget("", f_Enabled); ImGui::SameLine();
-        ConfigWidget(f_Fps, 1, 30, 360, "Fps unlocker");
+        ConfigWidget(f_Fps, 1, 30, 360, "Unlocks higher framerate.");
     }
 
     bool FPSUnlock::NeedStatusDraw() const

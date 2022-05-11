@@ -165,7 +165,7 @@ namespace cheat::feature
 		MapTeleport& mapTeleport = MapTeleport::GetInstance();
 
 		if (!mapTeleport.f_Enabled || !mapTeleport.f_Key.value().IsPressed())
-			return callOrigin(InLevelMapPageContext_OnMapClicked_Hook, __this, screenPos, method);
+			return CALL_ORIGIN(InLevelMapPageContext_OnMapClicked_Hook, __this, screenPos, method);
 
 		app::Vector2 mapPosition{};
 		bool mapPosResult = ScreenToMapPosition(__this, screenPos, &mapPosition);
@@ -180,7 +180,7 @@ namespace cheat::feature
 	{
 		MapTeleport& mapTeleport = MapTeleport::GetInstance();
 		if (!mapTeleport.f_Enabled || !mapTeleport.f_Key.value().IsPressed())
-			return callOrigin(InLevelMapPageContext_OnMarkClicked_Hook, __this, mark, method);
+			return CALL_ORIGIN(InLevelMapPageContext_OnMarkClicked_Hook, __this, mark, method);
 
 		mapTeleport.TeleportTo(mark->fields._levelMapPos);
 	}
@@ -259,7 +259,7 @@ namespace cheat::feature
 
 	static app::Vector3 LocalEntityInfoData_GetTargetPos_Hook(app::LocalEntityInfoData* __this, MethodInfo* method)
 	{
-		auto result = callOrigin(LocalEntityInfoData_GetTargetPos_Hook, __this, method);
+		auto result = CALL_ORIGIN(LocalEntityInfoData_GetTargetPos_Hook, __this, method);
 		
 		MapTeleport& mapTeleport = MapTeleport::GetInstance();
 		mapTeleport.OnGetTargetPos(result);
@@ -269,7 +269,7 @@ namespace cheat::feature
 
 	static bool LoadingManager_NeedTransByServer_Hook(app::LoadingManager* __this, uint32_t sceneId, app::Vector3 position, MethodInfo* method)
 	{
-		auto result = callOrigin(LoadingManager_NeedTransByServer_Hook, __this, sceneId, position, method);
+		auto result = CALL_ORIGIN(LoadingManager_NeedTransByServer_Hook, __this, sceneId, position, method);
 
 		MapTeleport& mapTeleport = MapTeleport::GetInstance();
 		mapTeleport.OnCheckTeleportDistance(result);
@@ -284,7 +284,7 @@ namespace cheat::feature
 		MapTeleport& mapTeleport = MapTeleport::GetInstance();
 		mapTeleport.OnPerformPlayerTransmit(position);
 
-		callOrigin(LoadingManager_PerformPlayerTransmit_Hook, __this, position, someEnum, someUint1, teleportType, someUint2, method);
+		CALL_ORIGIN(LoadingManager_PerformPlayerTransmit_Hook, __this, position, someEnum, someUint1, teleportType, someUint2, method);
 	}
 
 
@@ -297,7 +297,7 @@ namespace cheat::feature
 			mapTeleport.OnSetAvatarPosition(position);
 		}
 
-		callOrigin(Entity_SetPosition_Hook, __this, position, someBool, method);
+		CALL_ORIGIN(Entity_SetPosition_Hook, __this, position, someBool, method);
 	}
 
 }

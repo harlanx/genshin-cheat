@@ -73,12 +73,27 @@ namespace cheat::feature
 
 		// Eventing
 		cheat::events::GameUpdateEvent += MY_METHOD_HANDLER(InteractiveMap::OnGameUpdate);
-		cheat::events::WndProcEvent += MY_METHOD_HANDLER(InteractiveMap::OnWndProc);
-		cheat::events::KeyUpEvent += MY_METHOD_HANDLER(InteractiveMap::OnKeyUp);
+		::events::WndProcEvent += MY_METHOD_HANDLER(InteractiveMap::OnWndProc);
 
 		cheat::events::AccountChangedEvent += MY_METHOD_HANDLER(InteractiveMap::OnAccountChanged);
 		config::ProfileChanged += MY_METHOD_HANDLER(InteractiveMap::OnConfigProfileChanged);
 
+		f_CompleteNearestPoint.value().PressedEvent += LAMBDA_HANDLER(
+			[this]()
+			{
+				auto& manager = game::EntityManager::instance();
+				auto point = FindNearestPoint(manager.avatar()->levelPosition(), f_PointFindRange, f_CompleteOnlyViewed, false, game::GetCurrentPlayerSceneID());
+				if (point)
+					CompletePoint(point);
+			}
+		);
+
+		f_RevertLatestCompletion.value().PressedEvent += LAMBDA_HANDLER(
+			[this]()
+			{
+				RevertLatestPointCompleting();
+			}
+		);
 
 		// Hooking
 		HookManager::install(app::MonoMiniMap_Update, InteractiveMap::MonoMiniMap_Update_Hook);
@@ -748,7 +763,7 @@ namespace cheat::feature
 			}
 		}
 
-		callOrigin(GadgetModule_OnGadgetInteractRsp_Hook, __this, notify, method);
+		CALL_ORIGIN(GadgetModule_OnGadgetInteractRsp_Hook, __this, notify, method);
 	}
 
 	void InteractiveMap::OnItemGathered(game::Entity* entity)
@@ -1273,7 +1288,7 @@ namespace cheat::feature
 	static app::Rect s_MapViewRect = { 0, 0, 1, 1 };
 	void InteractiveMap::InLevelMapPageContext_UpdateView_Hook(app::InLevelMapPageContext* __this, MethodInfo* method)
 	{
-		callOrigin(InLevelMapPageContext_UpdateView_Hook, __this, method);
+		CALL_ORIGIN(InLevelMapPageContext_UpdateView_Hook, __this, method);
 		s_MapViewRect = __this->fields._mapViewRect;
 	}
 
@@ -1322,7 +1337,7 @@ namespace cheat::feature
 	void InteractiveMap::MonoMiniMap_Update_Hook(app::MonoMiniMap* __this, MethodInfo* method)
 	{
 		_monoMiniMap = __this;
-		callOrigin(MonoMiniMap_Update_Hook, __this, method);
+		CALL_ORIGIN(MonoMiniMap_Update_Hook, __this, method);
 	}
 
 	static bool IsMiniMapActive()
@@ -1658,7 +1673,7 @@ namespace cheat::feature
 		if (MouseInIMapWindow())
 			return;
 
-		return callOrigin(InLevelMapPageContext_ZoomMap_Hook, __this, value, method);
+		return CALL_ORIGIN(InLevelMapPageContext_ZoomMap_Hook, __this, value, method);
 	}
 
 	void InteractiveMap::OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool& cancelled)
@@ -1684,22 +1699,6 @@ namespace cheat::feature
 			break;
 		default:
 			break;
-		}
-	}
-
-	void InteractiveMap::OnKeyUp(short key, bool& cancelled)
-	{
-		if (f_CompleteNearestPoint.value().IsPressed(key))
-		{
-			auto& manager = game::EntityManager::instance();
-			auto point = FindNearestPoint(manager.avatar()->levelPosition(), f_PointFindRange, f_CompleteOnlyViewed, false, game::GetCurrentPlayerSceneID());
-			if (point)
-				CompletePoint(point);
-		}
-
-		if (f_RevertLatestCompletion.value().IsPressed(key))
-		{
-			RevertLatestPointCompleting();
 		}
 	}
 

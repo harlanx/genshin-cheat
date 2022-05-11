@@ -94,7 +94,7 @@ namespace cheat::feature
 			// This value always above any ore durability
 			reduceDurability = 1000;
 		}
-		callOrigin(LCAbilityElement_ReduceModifierDurability_Hook, __this, modifierDurabilityIndex, reduceDurability, deltaTime, method);
+		CALL_ORIGIN(LCAbilityElement_ReduceModifierDurability_Hook, __this, modifierDurabilityIndex, reduceDurability, deltaTime, method);
 	}
 
 }

@@ -147,14 +147,14 @@ namespace cheat
 		CheckAccountChanged();
 		SAFE_EEND();
 		
-		callOrigin(GameManager_Update_Hook, __this, method);
+		CALL_ORIGIN(GameManager_Update_Hook, __this, method);
 	}
 
 	static void LevelSyncCombatPlugin_RequestSceneEntityMoveReq_Hook(app::BKFGGJFIIKC* __this, uint32_t entityId, app::MotionInfo* syncInfo,
 		bool isReliable, uint32_t relseq, MethodInfo* method)
 	{
 		events::MoveSyncEvent(entityId, syncInfo);
-		callOrigin(LevelSyncCombatPlugin_RequestSceneEntityMoveReq_Hook, __this, entityId, syncInfo, isReliable, relseq, method);
+		CALL_ORIGIN(LevelSyncCombatPlugin_RequestSceneEntityMoveReq_Hook, __this, entityId, syncInfo, isReliable, relseq, method);
 	}
 
 	static void InstallEventHooks() 

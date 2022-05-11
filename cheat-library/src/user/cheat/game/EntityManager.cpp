@@ -100,7 +100,7 @@ namespace cheat::game
 	bool EntityManager_RemoveEntity_Hook(app::EntityManager* __this, app::BaseEntity* entity, uint32_t specifiedRuntimeID, MethodInfo* method)
 	{
 		EntityManager::instance().OnRawEntityDestroy(entity);
-		return callOrigin(EntityManager_RemoveEntity_Hook, __this, entity, specifiedRuntimeID, method);
+		return CALL_ORIGIN(EntityManager_RemoveEntity_Hook, __this, entity, specifiedRuntimeID, method);
 	}
 
 	void EntityManager::OnRawEntityDestroy(app::BaseEntity* rawEntity)

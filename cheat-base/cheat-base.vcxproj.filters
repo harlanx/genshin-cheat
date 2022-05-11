@@ -27,13 +27,7 @@
     <ClInclude Include="src\cheat-base\PipeTransfer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheat-base\pipe\PacketData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheat-base\Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheat-base\pipe\PacketModifyData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\imgui\imgui.h">
@@ -94,9 +88,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\detours\detver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheat-base\Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cheat-base\HookManager.h">
@@ -195,6 +186,51 @@
     <ClInclude Include="src\cheat-base\config\fields\Toggle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\helpers\innerholder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\helpers\objectsaver.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\abstracteventhandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\eventhandlerptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\functoreventhandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\handlercast.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\handlers\methodeventhandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\helpers\is_equatable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\joins\abstracteventjoin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\joins\eventjoinwrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\joins\eventjoinwrapper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\joins\handlereventjoin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\joins\handlereventjoin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\events\event.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheat-base\globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cheat-base\util.cpp">
@@ -209,16 +245,10 @@
     <ClCompile Include="src\cheat-base\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheat-base\pipe\PacketModifyData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\imgui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vendor\imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheat-base\pipe\PacketData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\cheat-base\Patch.cpp">
@@ -276,6 +306,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\cheat-base\config\config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheat-base\events\joins\abstracteventjoin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheat-base\events\joins\eventjoinwrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheat-base\globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

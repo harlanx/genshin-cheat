@@ -6,7 +6,7 @@
 #include "Entity.h"
 #include "IEntityFilter.h"
 
-#include <cheat-base/Event.h>
+#include <cheat-base/events/event.hpp>
 
 namespace cheat::game
 {

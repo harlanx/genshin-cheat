@@ -15,7 +15,7 @@ namespace cheat::feature
 		NF(f_ShowInfo, "Show Info", section, true),
         section(section), name(name)
     {
-		events::KeyUpEvent += MY_METHOD_HANDLER(ItemTeleportBase::OnKeyUp);
+		f_Key.value().PressedEvent += MY_METHOD_HANDLER(ItemTeleportBase::OnTeleportKeyPressed);
     }
 
     void ItemTeleportBase::DrawMain()
@@ -48,19 +48,16 @@ namespace cheat::feature
 		DrawNearestEntityInfo();
 	}
 
-	void ItemTeleportBase::OnKeyUp(short key, bool& cancelled)
+	void ItemTeleportBase::OnTeleportKeyPressed()
 	{
-		if (GenshinCM::instance().IsMenuShowed())
+		if (GenshinCM::IsMenuShowed())
 			return;
 
-		if (f_Key.value().IsPressed(key))
+		auto entity = game::FindNearestEntity(*this);
+		if (entity != nullptr)
 		{
-			auto entity = game::FindNearestEntity(*this);
-			if (entity != nullptr)
-			{
-				MapTeleport& mapTeleport = MapTeleport::GetInstance();
-				mapTeleport.TeleportTo(entity->absolutePosition());
-			}
+			MapTeleport& mapTeleport = MapTeleport::GetInstance();
+			mapTeleport.TeleportTo(entity->absolutePosition());
 		}
 	}
 

@@ -24,7 +24,7 @@ namespace cheat::feature
     void CameraZoom::DrawMain()
     {
         ConfigWidget("", f_Enabled); ImGui::SameLine();
-        ConfigWidget("Camera zoom", f_Zoom, 0.01f, 1.0f, 500.0f, "Custom camera zooming.\n"
+        ConfigWidget("Camera Zoom", f_Zoom, 0.01f, 1.0f, 500.0f, "Custom camera zooming.\n"
             "Specified value is multiplier for default zoom distance.\n"
 			"For example:\n"
             "\t2.0 = 2.0 * defaultZoom"
@@ -58,7 +58,7 @@ namespace cheat::feature
         else
             data->currentWarningLocateRatio = 1.0;
         
-        callOrigin(SCameraModuleInitialize_SetWarningLocateRatio_Hook, __this, deltaTime, data, method);
+        CALL_ORIGIN(SCameraModuleInitialize_SetWarningLocateRatio_Hook, __this, deltaTime, data, method);
     }
 }
 

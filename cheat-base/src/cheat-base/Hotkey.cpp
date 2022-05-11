@@ -208,22 +208,64 @@ void FixModKey(short& legacyKey)
 	}
 }
 
-Hotkey::Hotkey()
+Hotkey::Hotkey() : PressedEvent(m_PressedEvent), m_PressedEvent()
 {
-
+	events::KeyUpEvent += MY_METHOD_HANDLER(Hotkey::OnKeyUp);
 }
 
-Hotkey::Hotkey(std::vector<short> legacyKeys)
+Hotkey::Hotkey(std::vector<short> legacyKeys) : Hotkey()
 {
     for (short legacyKey : legacyKeys)
     {
-        this->keys.insert(legacyKey);
+        this->m_Keys.insert(legacyKey);
     }
 }
 
-Hotkey::Hotkey(short key)
+Hotkey::Hotkey(short key) : Hotkey()
 {
-    this->keys.insert(key);
+    this->m_Keys.insert(key);
+}
+
+Hotkey::Hotkey(const Hotkey& other) : Hotkey()
+{
+	m_Keys = {other.m_Keys};
+}
+
+Hotkey::~Hotkey()
+{
+	events::KeyUpEvent -= MY_METHOD_HANDLER(Hotkey::OnKeyUp);
+}
+
+Hotkey& Hotkey::operator=(Hotkey&& hotkey) noexcept
+{
+	m_Keys = std::move(hotkey.m_Keys);
+	return *this;
+}
+
+Hotkey& Hotkey::operator=(Hotkey& hotkey) noexcept
+{
+	m_Keys = hotkey.m_Keys;
+	return *this;
+}
+
+bool Hotkey::operator-(const Hotkey& c2)
+{
+	for (short key : m_Keys)
+	{
+		if (c2.m_Keys.count(key) == 0)
+			return true;
+	}
+	return false;
+}
+
+bool Hotkey::operator!=(const Hotkey& c2) const
+{
+	return !(*this == c2);
+}
+
+bool Hotkey::operator==(const Hotkey& c2) const
+{
+	return m_Keys == c2.m_Keys;
 }
 
 std::string GetKeyName(short key)
@@ -255,9 +297,9 @@ Hotkey::operator std::string() const
 
     std::stringstream hotkeyNameStream;
 
-    for (auto it = keys.begin(); it != keys.end(); it++)
+    for (auto it = m_Keys.begin(); it != m_Keys.end(); it++)
     {
-        if (it != keys.begin())
+        if (it != m_Keys.begin())
             hotkeyNameStream << " + ";
 
         hotkeyNameStream << GetKeyName(LegacyToInput(*it));
@@ -267,7 +309,7 @@ Hotkey::operator std::string() const
 
 bool Hotkey::IsPressed() const
 {
-	for (short key : keys)
+	for (short key : m_Keys)
 	{
 		if (!IsKeyDown(key))
 			return false;
@@ -280,10 +322,10 @@ bool Hotkey::IsPressed(short legacyKey) const
 {
 	FixModKey(legacyKey);
 
-    if (keys.count(legacyKey) == 0)
+    if (m_Keys.count(legacyKey) == 0)
         return false;
 
-    std::unordered_set<short> keysClone = keys;
+    std::unordered_set<short> keysClone = m_Keys;
     keysClone.erase(legacyKey);
 
     for (short key : keysClone)
@@ -299,7 +341,7 @@ bool Hotkey::IsPressed(short legacyKey) const
 bool Hotkey::IsReleased() const
 {
 	bool released = false;
-	for (short key : keys)
+	for (short key : m_Keys)
 	{
 		if (IsKeyReleased(key))
 		{
@@ -316,12 +358,12 @@ bool Hotkey::IsReleased() const
 
 bool Hotkey::IsEmpty() const
 {
-    return keys.size() == 0;
+    return m_Keys.size() == 0;
 }
 
 std::vector<short> Hotkey::GetKeys() const
 {
-    return std::vector<short>(keys.begin(), keys.end());
+    return std::vector<short>(m_Keys.begin(), m_Keys.end());
 }
 
 Hotkey Hotkey::GetPressedHotkey()
@@ -334,14 +376,20 @@ Hotkey Hotkey::GetPressedHotkey()
     {
         bool isKeyDown = io.KeysDown[i];
         if (isKeyDown)
-            hotkey.keys.insert(InputToLegacy(i));
+            hotkey.m_Keys.insert(InputToLegacy(i));
     }
 
     for (ImGuiKey i = 0; i < ImGuiMouseButton_COUNT; i++)
     {
         bool isMouseButtonDown = io.MouseDown[i];
         if (isMouseButtonDown)
-            hotkey.keys.insert(InputToLegacy(i));
+            hotkey.m_Keys.insert(InputToLegacy(i));
     }
     return hotkey;
+}
+
+void Hotkey::OnKeyUp(short key, bool& canceled)
+{
+	if (IsPressed(key))
+		m_PressedEvent();
 }

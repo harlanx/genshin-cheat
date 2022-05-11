@@ -20,6 +20,7 @@ namespace cheat::game::filters
 		ChestFilter PreciousChest = ChestFilter(game::Chest::ChestRarity::Precious);
 		ChestFilter LuxuriousChest = ChestFilter(game::Chest::ChestRarity::Luxurious);
 		ChestFilter RemarkableChest = ChestFilter(game::Chest::ChestRarity::Remarkable);
+		ChestFilter SearchPoint = ChestFilter(game::Chest::ItemType::Investigate);
 
 		ChestFilter SLocked = ChestFilter(game::Chest::ChestState::Locked);
 		ChestFilter SInLock = ChestFilter(game::Chest::ChestState::InRock);
@@ -298,7 +299,10 @@ namespace cheat::game::filters
 			"HumanJars",
 			"QQTotem",
 			"WatchTower01",
-			"WatchTower02"
+			"WatchTower02",
+			"StonePile",
+			"BrokenWall",
+			"WoodenBox"
 		} };
 		SimpleFilter Animals = { app::EntityType__Enum_1::EnvAnimal };
 		SimpleFilter AnimalDrop = {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <il2cpp-appdata.h>
-#include <cheat-base/Event.h>
+#include <cheat-base/events/event.hpp>
 
 namespace cheat::events
 {

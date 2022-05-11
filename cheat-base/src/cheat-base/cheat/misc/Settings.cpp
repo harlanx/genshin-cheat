@@ -3,6 +3,8 @@
 
 #include <cheat-base/render/gui-util.h>
 #include <cheat-base/render/renderer.h>
+#include <cheat-base/cheat/CheatManagerBase.h>
+
 namespace cheat::feature 
 {
     Settings::Settings() : Feature(),
@@ -23,10 +25,14 @@ namespace cheat::feature
 		NF(f_NotificationsDelay, "Notifications Delay", "General::Notify", 500),
   
 		NF(f_FileLogging,    "File Logging",    "General::Logging", false),
-		NF(f_ConsoleLogging, "Console Logging", "General::Logging", true)
+		NF(f_ConsoleLogging, "Console Logging", "General::Logging", true),
+
+		NF(f_FastExitEnable, "Fast Exit", "General::FastExit", false),
+		NF(f_HotkeyExit, "Hotkeys", "General::FastExit", Hotkey(VK_F12))
 		
     {
 		renderer::SetGlobalFontSize(f_FontSize);
+		f_HotkeyExit.value().PressedEvent += MY_METHOD_HANDLER(Settings::OnExitKeyPressed);
     }
 
     const FeatureGUIInfo& Settings::GetGUIInfo() const
@@ -98,6 +104,23 @@ namespace cheat::feature
 			ConfigWidget(f_NotificationsDelay, 1,1,10000, "Delay in milliseconds between notifications.");
 		}
 		EndGroupPanel();
+
+		BeginGroupPanel("Fast Exit", ImVec2(-1, 0));
+		{
+			ConfigWidget("Enabled",
+				f_FastExitEnable,
+				"Enable Fast Exit.\n" 
+			);
+			if (!f_FastExitEnable)
+				ImGui::BeginDisabled();
+
+			ConfigWidget("Key", f_HotkeyExit, true,
+				"Key to exit the game.");
+
+			if (!f_FastExitEnable)
+				ImGui::EndDisabled();
+		}
+		EndGroupPanel();
 	}
 
     Settings& Settings::GetInstance()
@@ -105,5 +128,13 @@ namespace cheat::feature
         static Settings instance;
         return instance;
     }
+
+	void Settings::OnExitKeyPressed()
+	{
+		if (!f_FastExitEnable || CheatManagerBase::IsMenuShowed())
+			return;
+
+		ExitProcess(0);
+	}
 }
 

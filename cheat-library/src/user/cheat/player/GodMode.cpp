@@ -55,7 +55,7 @@ namespace cheat::feature
 		if (gm.f_Enabled && entity->isAvatar())
 			return false;
 
-		return callOrigin(Miscs_CheckTargetAttackable_Hook, __this, attacker, target, method);
+		return CALL_ORIGIN(Miscs_CheckTargetAttackable_Hook, __this, attacker, target, method);
 	}
 
 	// Raised when avatar fall on ground.
@@ -71,7 +71,7 @@ namespace cheat::feature
 			reachMaxDownVelocityTime = 0;
 		}
 		// LOG_DEBUG("%s, %f", il2cppi_to_string(velocity).c_str(), reachMaxDownVelocityTime);
-		callOrigin(VCHumanoidMove_NotifyLandVelocity_Hook, __this, velocity, reachMaxDownVelocityTime, method);
+		CALL_ORIGIN(VCHumanoidMove_NotifyLandVelocity_Hook, __this, velocity, reachMaxDownVelocityTime, method);
 	}
 
     // Analog function for disable attack damage (Thanks to Taiga74164)

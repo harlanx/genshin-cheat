@@ -37,11 +37,18 @@
 #include <cheat-base/PipeTransfer.h>
 #include <cheat-base/HookManager.h>
 #include <cheat-base/Patch.h>
-#include <cheat-base/Event.h>
 #include <cheat-base/render/gui-util.h>
 #include <cheat-base/render/ImageLoader.h>
 
+#include <cheat-base/events/event.hpp>
+#include <cheat-base/events/handlers/methodeventhandler.hpp>
+#include <cheat-base/events/handlers/functoreventhandler.hpp>
+#include <cheat-base/events/joins/handlereventjoin.hpp>
+#include <cheat-base/events/joins/eventjoinwrapper.hpp>
+
 #include <cheat-base/ResourceLoader.h>
+
+#include <cheat-base/globals.h>
 
 #include <imgui.h>
 #include <imgui_notify.h>

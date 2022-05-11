@@ -48,7 +48,7 @@ namespace cheat::feature
         DumbEnemies& dumbEnemies = DumbEnemies::GetInstance();
 		if (dumbEnemies.f_Enabled)
 			return;
-		callOrigin(VCMonsterAIController_TryDoSkill_Hook, __this, skillID, method);
+		CALL_ORIGIN(VCMonsterAIController_TryDoSkill_Hook, __this, skillID, method);
 	}
 }
 
